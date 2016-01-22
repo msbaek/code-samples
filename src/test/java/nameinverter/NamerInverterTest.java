@@ -49,13 +49,21 @@ public class NamerInverterTest {
 		if (name == null || name.isEmpty())
 			return "";
 		else {
-			List<String> names = new ArrayList<>(Arrays.asList(name.trim().split("\\s+")));
-			if (names.size() > 1 && names.get(0).equals("Mr."))
+			List<String> names = splitNames(name);
+			if (names.size() > 1 && isHonorific(names.get(0)))
 				names.remove(0);
 			if (names.size() == 1)
 				return names.get(0);
 			else
 				return String.format("%s, %s", names.get(1), names.get(0));
 		}
+	}
+
+	private boolean isHonorific(String name) {
+		return name.equals("Mr.");
+	}
+
+	private ArrayList<String> splitNames(String name) {
+		return new ArrayList<>(Arrays.asList(name.trim().split("\\s+")));
 	}
 }

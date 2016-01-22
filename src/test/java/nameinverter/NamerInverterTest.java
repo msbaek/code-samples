@@ -26,6 +26,11 @@ public class NamerInverterTest {
 		assertThat(invert("First Last"), is("Last, First"));
 	}
 
+	@Test
+	public void given_simple_name_with_leading_spaces___returns_simple_name() throws Exception {
+		assertThat(invert(" Name"), is("Name"));
+	}
+
 	private String invert(String name) {
 		if (name == null || name.isEmpty())
 			return "";

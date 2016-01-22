@@ -61,11 +61,8 @@ public class NamerInverterTest {
 	private String invert(String name) {
 		if (name == null || name.isEmpty())
 			return "";
-		else {
-			List<String> names = splitNames(name);
-			removeHonorifics(names);
-			return formatName(names);
-		}
+		else
+			return formatName(removeHonorifics(splitNames(name)));
 	}
 
 	private String formatName(List<String> names) {
@@ -76,9 +73,10 @@ public class NamerInverterTest {
 		}
 	}
 
-	private void removeHonorifics(List<String> names) {
+	private List<String> removeHonorifics(List<String> names) {
 		if (names.size() > 1 && isHonorific(names.get(0)))
 			names.remove(0);
+		return names;
 	}
 
 	private String formatMultiElementName(List<String> names) {

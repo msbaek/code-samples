@@ -31,10 +31,10 @@ public class NamerInverterTest {
 			return "";
 		else {
 			String[] names = name.split(" ");
-			if(names.length == 2)
-				return String.format("%s, %s", names[1], names[0]);
-			else
+			if (names.length != 2)
 				return name;
+			else
+				return String.format("%s, %s", names[1], names[0]);
 		}
 	}
 }

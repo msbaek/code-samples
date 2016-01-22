@@ -27,6 +27,11 @@ public class NamerInverterTest {
 	}
 
 	@Test
+	public void given_first_last_with_multiple_spaces_between___returns_last_first() throws Exception {
+		assertThat(invert("First   Last"), is("Last, First"));
+	}
+
+	@Test
 	public void given_simple_name_with_leading_spaces___returns_simple_name() throws Exception {
 		assertThat(invert(" Name"), is("Name"));
 	}

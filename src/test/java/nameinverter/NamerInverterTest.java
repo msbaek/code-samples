@@ -27,14 +27,13 @@ public class NamerInverterTest {
 	}
 
 	private String invert(String name) {
-		if(name == null || name.isEmpty())
+		if (name == null || name.isEmpty())
 			return "";
 		else {
 			String[] names = name.split(" ");
-			if (names.length != 2)
+			if (names.length == 1)
 				return name;
-			else
-				return String.format("%s, %s", names[1], names[0]);
+			return String.format("%s, %s", names[1], names[0]);
 		}
 	}
 }

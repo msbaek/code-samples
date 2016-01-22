@@ -1,5 +1,6 @@
 package nameinverter;
 
+import com.google.common.base.Joiner;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -63,9 +64,10 @@ public class NamerInverterTest {
 				return names.get(0);
 			else {
 				String postNominal = "";
-				if (names.size() > 2) {
-					postNominal = names.get(2);
-				}
+				List<String> postNominals = new ArrayList<>();
+				if (names.size() > 2)
+					postNominals = names.subList(2, names.size());
+				postNominal = Joiner.on(" ").join(postNominals);
 				return String.format("%s, %s %s", names.get(1), names.get(0), postNominal).trim();
 			}
 		}

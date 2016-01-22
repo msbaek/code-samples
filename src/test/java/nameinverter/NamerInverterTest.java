@@ -43,12 +43,13 @@ public class NamerInverterTest {
 	@Test
 	public void given_honorific_and_first_last___returns_last_first() throws Exception {
 		assertThat(invert("Mr. First Last"), is("Last, First"));
-		assertThat(invert("Mrs. First Last"), is("Last, First"));
+		assertThat(invert("Mrs. First Last"), is("Last, First")); // single assert rule. assert should be logical
 	}
 
 	@Test
 	public void given_post_nominals_exists___post_nominals_stays_at_end() throws Exception {
 		assertThat(invert("First Last Sr."), is("Last, First Sr."));
+		assertThat(invert("First Last BS. Phd."), is("Last, First BS. Phd."));
 	}
 
 	private String invert(String name) {
@@ -62,8 +63,9 @@ public class NamerInverterTest {
 				return names.get(0);
 			else {
 				String postNominal = "";
-				if (names.size() > 2)
+				if (names.size() > 2) {
 					postNominal = names.get(2);
+				}
 				return String.format("%s, %s %s", names.get(1), names.get(0), postNominal).trim();
 			}
 		}

@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 public class StopwatchTest {
     @Test
     public void elapsedTime() throws InterruptedException {
-        Stopwatch watch = new Stopwatch().start();
+        Stopwatch watch = Stopwatch.createStarted();
         Thread.sleep(1 * 100);
-        System.out.printf("elapsed time in microsecods = %s", watch.elapsedTime(TimeUnit.MICROSECONDS));
+        System.out.printf("elapsed time in microsecods = %s", watch.elapsed(TimeUnit.MICROSECONDS));
     }
 }

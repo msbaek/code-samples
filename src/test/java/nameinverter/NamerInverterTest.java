@@ -11,6 +11,11 @@ public class NamerInverterTest {
 		assertThat(invert(null), is(""));
 	}
 
+	@Test
+	public void given_empty_string___returns_empty_string() throws Exception {
+		assertThat(invert(""), is(""));
+	}
+
 	private String invert(String name) {
 		return "";
 	}

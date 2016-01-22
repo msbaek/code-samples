@@ -63,14 +63,18 @@ public class NamerInverterTest {
 			return "";
 		else {
 			List<String> names = splitNames(name);
-			if (names.size() > 1 && isHonorific(names.get(0)))
-				names.remove(0);
+			removeHonorifics(names);
 			if (names.size() == 1)
 				return names.get(0);
 			else {
 				return formatName(names);
 			}
 		}
+	}
+
+	private void removeHonorifics(List<String> names) {
+		if (names.size() > 1 && isHonorific(names.get(0)))
+			names.remove(0);
 	}
 
 	private String formatName(List<String> names) {

@@ -62,22 +62,6 @@ public class NamerInverterTest {
 		return new NameInverter(name).invoke();
 	}
 
-	private String formatMultiElementName(List<String> names) {
-		String postNominal = "";
-		if (names.size() > 2)
-			postNominal = getPostNominals(names);
-		return String.format("%s, %s %s", names.get(1), names.get(0), postNominal).trim();
-	}
-
-	private String getPostNominals(List<String> names) {
-		List<String> postNominals = names.subList(2, names.size());
-		return Joiner.on(" ").join(postNominals);
-	}
-
-	private boolean isHonorific(String name) {
-		return name.matches("Mr\\.|Mrs\\.");
-	}
-
 	private class NameInverter {
 		private String name;
 
@@ -90,6 +74,22 @@ public class NamerInverterTest {
 				return "";
 			else
 				return formatName(removeHonorifics(splitNames(name)));
+		}
+
+		private boolean isHonorific(String name) {
+			return name.matches("Mr\\.|Mrs\\.");
+		}
+
+		private String formatMultiElementName(List<String> names) {
+			String postNominal = "";
+			if (names.size() > 2)
+				postNominal = getPostNominals(names);
+			return String.format("%s, %s %s", names.get(1), names.get(0), postNominal).trim();
+		}
+
+		private String getPostNominals(List<String> names) {
+			List<String> postNominals = names.subList(2, names.size());
+			return Joiner.on(" ").join(postNominals);
 		}
 
 		private String formatName(List<String> names) {

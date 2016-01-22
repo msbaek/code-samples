@@ -36,6 +36,11 @@ public class NamerInverterTest {
 		assertThat(invert(" Name"), is("Name"));
 	}
 
+	@Test
+	public void given_honorific_and_first_last___returns_last_first() throws Exception {
+		assertThat(invert("Mr. First Last"), is("Last, First"));
+	}
+
 	private String invert(String name) {
 		if (name == null || name.isEmpty())
 			return "";

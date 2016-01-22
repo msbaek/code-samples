@@ -43,6 +43,7 @@ public class NamerInverterTest {
 	@Test
 	public void given_honorific_and_first_last___returns_last_first() throws Exception {
 		assertThat(invert("Mr. First Last"), is("Last, First"));
+		assertThat(invert("Mrs. First Last"), is("Last, First"));
 	}
 
 	private String invert(String name) {

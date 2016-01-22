@@ -22,6 +22,9 @@ public class NamerInverterTest {
 	}
 
 	private String invert(String name) {
-		return "";
+		if(name == null || name.isEmpty())
+			return "";
+
+		return name;
 	}
 }

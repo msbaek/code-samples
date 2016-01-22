@@ -46,6 +46,11 @@ public class NamerInverterTest {
 		assertThat(invert("Mrs. First Last"), is("Last, First"));
 	}
 
+	@Test
+	public void given_post_nominals_exists___post_nominals_stays_at_end() throws Exception {
+		assertThat(invert("First Last Sr."), is("Last, First Sr."));
+	}
+
 	private String invert(String name) {
 		if (name == null || name.isEmpty())
 			return "";

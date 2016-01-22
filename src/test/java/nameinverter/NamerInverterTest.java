@@ -53,6 +53,11 @@ public class NamerInverterTest {
 		assertThat(invert("First Last BS. Phd."), is("Last, First BS. Phd."));
 	}
 
+	@Test
+	public void integrated_case() {
+		assertThat(invert("   Rober Martin III esq.  "), is("Martin, Rober III esq."));
+	}
+
 	private String invert(String name) {
 		if (name == null || name.isEmpty())
 			return "";
@@ -63,14 +68,19 @@ public class NamerInverterTest {
 			if (names.size() == 1)
 				return names.get(0);
 			else {
-				String postNominal = "";
-				List<String> postNominals = new ArrayList<>();
-				if (names.size() > 2)
-					postNominals = names.subList(2, names.size());
-				postNominal = Joiner.on(" ").join(postNominals);
+				String postNominal = getPostNominals(names);
 				return String.format("%s, %s %s", names.get(1), names.get(0), postNominal).trim();
 			}
 		}
+	}
+
+	private String getPostNominals(List<String> names) {
+		String postNominal = "";
+		List<String> postNominals = new ArrayList<>();
+		if (names.size() > 2)
+			postNominals = names.subList(2, names.size());
+		postNominal = Joiner.on(" ").join(postNominals);
+		return postNominal;
 	}
 
 	private boolean isHonorific(String name) {

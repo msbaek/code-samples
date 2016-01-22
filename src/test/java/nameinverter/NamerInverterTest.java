@@ -60,8 +60,12 @@ public class NamerInverterTest {
 				names.remove(0);
 			if (names.size() == 1)
 				return names.get(0);
-			else
-				return String.format("%s, %s", names.get(1), names.get(0));
+			else {
+				String postNominal = "";
+				if (names.size() > 2)
+					postNominal = names.get(2);
+				return String.format("%s, %s %s", names.get(1), names.get(0), postNominal).trim();
+			}
 		}
 	}
 

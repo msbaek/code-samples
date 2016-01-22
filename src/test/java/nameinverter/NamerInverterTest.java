@@ -43,7 +43,8 @@ public class NamerInverterTest {
 			String[] names = name.trim().split("\\s+");
 			if (names.length == 1)
 				return names[0];
-			return String.format("%s, %s", names[1], names[0]);
+			else
+				return String.format("%s, %s", names[1], names[0]);
 		}
 	}
 }

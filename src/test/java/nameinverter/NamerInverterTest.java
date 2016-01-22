@@ -67,7 +67,7 @@ public class NamerInverterTest {
 			if (names.size() == 1)
 				return names.get(0);
 			else {
-				return formatName(names);
+				return formatMultiElementName(names);
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public class NamerInverterTest {
 			names.remove(0);
 	}
 
-	private String formatName(List<String> names) {
+	private String formatMultiElementName(List<String> names) {
 		String postNominal = "";
 		if (names.size() > 2)
 			postNominal = getPostNominals(names);

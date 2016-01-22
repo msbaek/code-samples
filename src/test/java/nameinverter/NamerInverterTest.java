@@ -59,24 +59,7 @@ public class NamerInverterTest {
 	}
 
 	private String invert(String name) {
-		if (name == null || name.isEmpty())
-			return "";
-		else
-			return formatName(removeHonorifics(splitNames(name)));
-	}
-
-	private String formatName(List<String> names) {
-		if (names.size() == 1)
-			return names.get(0);
-		else {
-			return formatMultiElementName(names);
-		}
-	}
-
-	private List<String> removeHonorifics(List<String> names) {
-		if (names.size() > 1 && isHonorific(names.get(0)))
-			names.remove(0);
-		return names;
+		return new NameInverter(name).invoke();
 	}
 
 	private String formatMultiElementName(List<String> names) {
@@ -95,7 +78,36 @@ public class NamerInverterTest {
 		return name.matches("Mr\\.|Mrs\\.");
 	}
 
-	private ArrayList<String> splitNames(String name) {
-		return new ArrayList<>(Arrays.asList(name.trim().split("\\s+")));
+	private class NameInverter {
+		private String name;
+
+		public NameInverter(String name) {
+			this.name = name;
+		}
+
+		public String invoke() {
+			if (name == null || name.isEmpty())
+				return "";
+			else
+				return formatName(removeHonorifics(splitNames(name)));
+		}
+
+		private String formatName(List<String> names) {
+			if (names.size() == 1)
+				return names.get(0);
+			else {
+				return formatMultiElementName(names);
+			}
+		}
+
+		private List<String> removeHonorifics(List<String> names) {
+			if (names.size() > 1 && isHonorific(names.get(0)))
+				names.remove(0);
+			return names;
+		}
+
+		private ArrayList<String> splitNames(String name) {
+			return new ArrayList<>(Arrays.asList(name.trim().split("\\s+")));
+		}
 	}
 }

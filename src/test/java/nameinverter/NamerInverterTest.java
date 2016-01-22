@@ -75,12 +75,10 @@ public class NamerInverterTest {
 	}
 
 	private String getPostNominals(List<String> names) {
-		String postNominal = "";
 		List<String> postNominals = new ArrayList<>();
 		if (names.size() > 2)
 			postNominals = names.subList(2, names.size());
-		postNominal = Joiner.on(" ").join(postNominals);
-		return postNominal;
+		return Joiner.on(" ").join(postNominals);
 	}
 
 	private boolean isHonorific(String name) {

@@ -61,7 +61,7 @@ public class NamerInverterTest {
 	}
 
 	private boolean isHonorific(String name) {
-		return name.equals("Mr.");
+		return name.equals("Mr.") || name.equals("Mrs.");
 	}
 
 	private ArrayList<String> splitNames(String name) {

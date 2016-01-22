@@ -68,12 +68,16 @@ public class NamerInverterTest {
 			if (names.size() == 1)
 				return names.get(0);
 			else {
-				String postNominal = "";
-				if (names.size() > 2)
-					postNominal = getPostNominals(names);
-				return String.format("%s, %s %s", names.get(1), names.get(0), postNominal).trim();
+				return formatName(names);
 			}
 		}
+	}
+
+	private String formatName(List<String> names) {
+		String postNominal = "";
+		if (names.size() > 2)
+			postNominal = getPostNominals(names);
+		return String.format("%s, %s %s", names.get(1), names.get(0), postNominal).trim();
 	}
 
 	private String getPostNominals(List<String> names) {

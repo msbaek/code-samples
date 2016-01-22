@@ -35,10 +35,9 @@ public class NamerInverterTest {
 		if (name == null || name.isEmpty())
 			return "";
 		else {
-			name = name.trim();
-			String[] names = name.split(" ");
+			String[] names = name.trim().split(" ");
 			if (names.length == 1)
-				return name;
+				return names[0];
 			return String.format("%s, %s", names[1], names[0]);
 		}
 	}

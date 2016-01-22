@@ -64,11 +64,15 @@ public class NamerInverterTest {
 		else {
 			List<String> names = splitNames(name);
 			removeHonorifics(names);
-			if (names.size() == 1)
-				return names.get(0);
-			else {
-				return formatMultiElementName(names);
-			}
+			return formatName(names);
+		}
+	}
+
+	private String formatName(List<String> names) {
+		if (names.size() == 1)
+			return names.get(0);
+		else {
+			return formatMultiElementName(names);
 		}
 	}
 

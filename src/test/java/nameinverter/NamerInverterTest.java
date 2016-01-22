@@ -29,7 +29,9 @@ public class NamerInverterTest {
 	private String invert(String name) {
 		if(name == null || name.isEmpty())
 			return "";
-
-		return name;
+		else {
+			String[] names = name.split(" ");
+			return String.format("%s, %s", names[1], names[0]);
+		}
 	}
 }

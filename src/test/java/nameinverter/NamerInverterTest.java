@@ -59,17 +59,11 @@ public class NamerInverterTest {
 	}
 
 	private String invert(String name) {
-		return new NameInverter(name).invoke();
+		return new NameInverter().invoke(name);
 	}
 
 	private class NameInverter {
-		private String name;
-
-		public NameInverter(String name) {
-			this.name = name;
-		}
-
-		public String invoke() {
+		public String invoke(String name) {
 			if (name == null || name.isEmpty())
 				return "";
 			else

@@ -2,6 +2,9 @@ package nameinverter;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -45,11 +48,11 @@ public class NamerInverterTest {
 		if (name == null || name.isEmpty())
 			return "";
 		else {
-			String[] names = name.trim().split("\\s+");
-			if (names.length == 1)
-				return names[0];
+			List<String> names = Arrays.asList(name.trim().split("\\s+"));
+			if (names.size() == 1)
+				return names.get(0);
 			else
-				return String.format("%s, %s", names[1], names[0]);
+				return String.format("%s, %s", names.get(1), names.get(0));
 		}
 	}
 }

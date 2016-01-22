@@ -2,6 +2,7 @@ package nameinverter;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class NamerInverterTest {
 		if (name == null || name.isEmpty())
 			return "";
 		else {
-			List<String> names = Arrays.asList(name.trim().split("\\s+"));
+			List<String> names = new ArrayList<>(Arrays.asList(name.trim().split("\\s+")));
 			if (names.size() > 1 && names.get(0).equals("Mr."))
 				names.remove(0);
 			if (names.size() == 1)

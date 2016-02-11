@@ -1,7 +1,6 @@
 public class MoneyMarketAccount extends Account {
-
 	@Override
-	public double getInterestEarned() {
-		return getBalance() * .04;
+	protected double getInterestRate() {
+		return 0.04;
 	}
 }

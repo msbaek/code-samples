@@ -1,5 +1,6 @@
 public class SavingsAccount extends Account {
-	public double getInterestEarned() {
-		return getBalance() * .03;
+	@Override
+	protected double getInterestRate() {
+		return 0.03;
 	}
 }

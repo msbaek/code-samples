@@ -1,11 +1,5 @@
-public class SavingsAccount {
-	private double balance;
-
+public class SavingsAccount extends Account {
 	public double getInterestEarned() {
-		return balance * .03;
-	}
-
-	public void setBalance(double balance) {
-		this.balance = balance;
+		return getBalance() * .03;
 	}
 }

@@ -6,6 +6,6 @@ public class MoneyMarketAccount {
 	}
 
 	public double getInterestEarned() {
-		return 0;
+		return balance * .04;
 	}
 }

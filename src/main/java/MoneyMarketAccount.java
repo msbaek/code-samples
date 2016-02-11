@@ -1,11 +1,7 @@
-public class MoneyMarketAccount {
-	private double balance;
+public class MoneyMarketAccount extends Account {
 
-	public void setBalance(double balance) {
-		this.balance = balance;
-	}
-
+	@Override
 	public double getInterestEarned() {
-		return balance * .04;
+		return getBalance() * .04;
 	}
 }

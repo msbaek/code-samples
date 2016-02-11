@@ -2,7 +2,7 @@ public class SavingsAccount {
 	private double balance;
 
 	public double getInterestEarned() {
-		return 3;
+		return balance * .03;
 	}
 
 	public void setBalance(double balance) {

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 
 public class MailTest {
 	@Test public void newMailBox_isEmpty() {
-		MailBox mailbox;
+		MailBox mailbox = null;
 		assertThat(mailbox.messageCount(), is(0));
 	}
 }

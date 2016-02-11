@@ -9,9 +9,9 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
 public class BankingAccountTest {
-	public static class SavingsAccountContext {
-		private SavingsAccount myAccount;
+	private static Account myAccount;
 
+	public static class SavingsAccountContext {
 		@Before
 		public void setUp() throws Exception {
 			myAccount = new SavingsAccount();
@@ -33,8 +33,6 @@ public class BankingAccountTest {
 	}
 
 	public static class MoneyMarketAccountContext {
-		private MoneyMarketAccount myAccount;
-
 		@Before
 		public void setUp() throws Exception {
 			myAccount = new MoneyMarketAccount();

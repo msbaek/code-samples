@@ -31,4 +31,27 @@ public class BankingAccountTest {
 			assertThat(myAccount.getInterestEarned(), is(closeTo(6.0, 0.001)));
 		}
 	}
+
+	public static class MoneyMarketAccountContext {
+		private MoneyMarketAccount myAccount;
+
+		@Before
+		public void setUp() throws Exception {
+			myAccount = new MoneyMarketAccount();
+		}
+
+		@Test
+		public void accountWithBalanceOf100_earns4InInterest() {
+			myAccount.setBalance(100.0);
+
+			assertThat(myAccount.getInterestEarned(), is(closeTo(4.0, 0.001)));
+		}
+
+		@Test
+		public void accountWithBalanceOf200_earns8InInterest() {
+			myAccount.setBalance(200.0);
+
+			assertThat(myAccount.getInterestEarned(), is(closeTo(8.0, 0.001)));
+		}
+	}
 }

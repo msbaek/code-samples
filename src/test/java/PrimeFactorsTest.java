@@ -17,6 +17,8 @@ public class PrimeFactorsTest {
 
 	private List<Integer> primeFactorsOf(int n) {
 		ArrayList<Integer> factors = new ArrayList<>();
+		if(n == 2)
+			factors.add(2);
 		return factors;
 	}
 

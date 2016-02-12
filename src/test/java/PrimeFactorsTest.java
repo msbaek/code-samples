@@ -24,11 +24,11 @@ public class PrimeFactorsTest {
 
 	private List<Integer> primeFactorsOf(int n) {
 		ArrayList<Integer> factors = new ArrayList<>();
-		if(n > 1) {
-			for(; n % 2 == 0; n /= 2)
-				factors.add(2);
-			for(; n % 3 == 0; n /= 3)
-				factors.add(3);
+		int divisor = 2;
+		while(n > 1) {
+			for(; n % divisor == 0; n /= divisor)
+				factors.add(divisor);
+			divisor++;
 		}
 		if(n > 1)
 			factors.add(n);

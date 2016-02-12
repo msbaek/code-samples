@@ -13,6 +13,7 @@ public class PrimeFactorsTest {
 	public void factors() {
 		assertThat(primeFactorsOf(1), isListOf());
 		assertThat(primeFactorsOf(2), isListOf(2));
+		assertThat(primeFactorsOf(3), isListOf(3));
 	}
 
 	private List<Integer> primeFactorsOf(int n) {

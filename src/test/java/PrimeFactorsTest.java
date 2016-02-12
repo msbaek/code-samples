@@ -1,6 +1,7 @@
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class PrimeFactorsTest {
 	}
 
 	private List<Integer> primeFactorsOf(int n) {
-		return null;
+		return new ArrayList<>();
 	}
 
 	private Matcher<List> isListOf(Integer... ints) {

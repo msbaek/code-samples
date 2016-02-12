@@ -15,6 +15,9 @@ public class PrimeFactorsTest {
 		assertThat(primeFactorsOf(2), isListOf(2));
 		assertThat(primeFactorsOf(3), isListOf(3));
 		assertThat(primeFactorsOf(4), isListOf(2,2));
+		assertThat(primeFactorsOf(5), isListOf(5));
+		assertThat(primeFactorsOf(6), isListOf(2,3));
+		assertThat(primeFactorsOf(7), isListOf(7));
 	}
 
 	private List<Integer> primeFactorsOf(int n) {

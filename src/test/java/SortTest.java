@@ -1,6 +1,5 @@
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +11,7 @@ public class SortTest {
 	public void sortings() {
 		assertThat(sort(intList()), is(intList()));
 		assertThat(sort(intList(1)), is(intList(1)));
+		assertThat(sort(intList(2, 1)), is(intList(1, 2)));
 	}
 
 	private List<Integer> intList(Integer ... ints) {

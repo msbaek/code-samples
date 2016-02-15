@@ -30,6 +30,13 @@ public class SortTest {
 				list.set(0, list.get(1));
 				list.set(1, temp);
 			}
+			if(list.size() > 2) {
+				if(list.get(1) > list.get(2)) {
+					int temp = list.get(1);
+					list.set(1, list.get(2));
+					list.set(2, temp);
+				}
+			}
 		}
 		return list;
 	}

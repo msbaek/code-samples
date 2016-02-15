@@ -38,16 +38,7 @@ public class SortTest {
 		List<Integer> sorted = new ArrayList<>();
 		if(list.size() == 1)
 			sorted.add(list.get(0));
-		else if(list.size() == 2) {
-			if (list.get(0) > list.get(1)) {
-				sorted.add(list.get(1));
-				sorted.add(list.get(0));
-			} else {
-				sorted.add(list.get(0));
-				sorted.add(list.get(1));
-			}
-		}
-		else if(list.size() == 3) {
+		else {
 			int l = 0;
 			int m = list.get(0);
 			int h = 0;

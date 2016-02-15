@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,6 +14,6 @@ public class SortTest {
 	}
 
 	private List<Integer> sort(List<Integer> list) {
-		return null;
+		return new ArrayList<>();
 	}
 }

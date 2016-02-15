@@ -51,12 +51,11 @@ public class SortTest {
 			int l = 0;
 			int m = list.get(0);
 			int h = 0;
-			if (list.get(1) > list.get(2)) {
-				l = list.get(2);
-				h = list.get(1);
-			} else {
-				l = list.get(1);
-				h = list.get(2);
+			for (int i : list) {
+				if(i < m)
+					l = i;
+				if(i > m)
+					h = i;
 			}
 			sorted.add(l);
 			sorted.add(m);

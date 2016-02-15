@@ -36,21 +36,21 @@ public class SortTest {
 
 	private List<Integer> sort(List<Integer> list) {
 		List<Integer> sorted = new ArrayList<>();
-		if(list.size() == 1)
-			sorted.add(list.get(0));
+		if(list.size() <= 1)
+			return list;
 		else {
-			int l = 0;
+			Integer l = null;
 			int m = list.get(0);
-			int h = 0;
+			Integer h = null;
 			for (int i : list) {
 				if(i < m)
 					l = i;
 				if(i > m)
 					h = i;
 			}
-			sorted.add(l);
+			if(l != null) sorted.add(l);
 			sorted.add(m);
-			sorted.add(h);
+			if(h != null) sorted.add(h);
 		}
 		return sorted;
 	}

@@ -33,6 +33,17 @@ public class SortTest {
 	}
 
 	private List<Integer> sort(List<Integer> list) {
-		return list;
+		List<Integer> sorted = new ArrayList<>();
+		if(list.size() <= 1)
+			return list;
+		if(list.get(0) > list.get(1)) {
+			sorted.add(list.get(1));
+			sorted.add(list.get(0));
+		}
+		else {
+			sorted.add(list.get(0));
+			sorted.add(list.get(1));
+		}
+		return sorted;
 	}
 }

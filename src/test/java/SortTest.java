@@ -13,6 +13,7 @@ public class SortTest {
 		assertSorted(intList(1), intList(1));
 		assertSorted(intList(2, 1), intList(1, 2));
 		assertSorted(intList(1, 3, 2), intList(1, 2, 3));
+		assertSorted(intList(3, 2, 1), intList(1, 2, 3));
 	}
 
 	private void assertSorted(List<Integer> unsorted, List<Integer> sorted) {

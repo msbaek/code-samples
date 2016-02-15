@@ -24,19 +24,14 @@ public class SortTest {
 	}
 
 	private List<Integer> sort(List<Integer> list) {
-		if(list.size() > 1) {
-			if(list.get(0) > list.get(1)) {
-				int temp = list.get(0);
-				list.set(0, list.get(1));
-				list.set(1, temp);
+		int index = 0;
+		while(index < list.size() - 1) {
+			if(list.get(index) > list.get(index + 1)) {
+				int temp = list.get(index);
+				list.set(index, list.get(index + 1));
+				list.set(index + 1, temp);
 			}
-			if(list.size() > 2) {
-				if(list.get(1) > list.get(2)) {
-					int temp = list.get(1);
-					list.set(1, list.get(2));
-					list.set(2, temp);
-				}
-			}
+			index++;
 		}
 		return list;
 	}

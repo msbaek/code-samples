@@ -10,7 +10,11 @@ import static org.junit.Assert.assertThat;
 public class SortTest {
 	@Test
 	public void sortings() {
-		assertThat(sort(Arrays.asList()), is(Arrays.asList()));
+		assertThat(sort(intList()), is(intList()));
+	}
+
+	private List<Integer> intList() {
+		return Arrays.asList();
 	}
 
 	private List<Integer> sort(List<Integer> list) {

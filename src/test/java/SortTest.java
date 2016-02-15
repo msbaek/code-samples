@@ -48,15 +48,19 @@ public class SortTest {
 			}
 		}
 		else if(list.size() == 3) {
+			int l = 0;
+			int m = list.get(0);
+			int h = 0;
 			if (list.get(1) > list.get(2)) {
-				sorted.add(list.get(2));
-				sorted.add(list.get(0));
-				sorted.add(list.get(1));
+				l = list.get(2);
+				h = list.get(1);
 			} else {
-				sorted.add(list.get(1));
-				sorted.add(list.get(0));
-				sorted.add(list.get(2));
+				l = list.get(1);
+				h = list.get(2);
 			}
+			sorted.add(l);
+			sorted.add(m);
+			sorted.add(h);
 		}
 		return sorted;
 	}

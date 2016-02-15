@@ -9,10 +9,14 @@ import static org.junit.Assert.assertThat;
 public class SortTest {
 	@Test
 	public void sortings() {
-		assertThat(sort(intList()), is(intList()));
-		assertThat(sort(intList(1)), is(intList(1)));
+		assertSorted(intList(), intList());
+		assertSorted(intList(1), intList(1));
 		List<Integer> unsorted = intList(2, 1);
 		List<Integer> sorted = intList(1, 2);
+		assertSorted(unsorted, sorted);
+	}
+
+	private void assertSorted(List<Integer> unsorted, List<Integer> sorted) {
 		assertThat(sort(unsorted), is(sorted));
 	}
 

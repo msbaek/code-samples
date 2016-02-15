@@ -19,6 +19,6 @@ public class SortTest {
 	}
 
 	private List<Integer> sort(List<Integer> list) {
-		return new ArrayList<>();
+		return list;
 	}
 }

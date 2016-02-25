@@ -2,7 +2,13 @@
 
 [원문](http://cleancoders.com/episode/clean-code-episode-19-p1/show)
 
-### TDD Review - The Three Laws
+[toc]
+
+## TDD Review - The Three Laws
+
+이 예제에서는 리팩토링을 통해 test가 more specific해짐에 따라 production code가 more generic해지는 과정을 설명한다.
+
+[github commits](https://github.com/msbaek/code-samples/commits/cc-19-name-inverter?page=2)
 
 - 1st law: before you write any production code you must write a test code for that code and of course that test fail
 - 2nd law: stop writing test as soon as it fails even if it is compile error.
@@ -58,6 +64,8 @@ public class NamerInverterTest {
 
 ![](https://api.monosnap.com/rpc/file/download?id=cYY6oZCD3tMYpfCLMw0snnxleB058A)
 
+- null transformation
+- null to constant transformation
 
 [github](https://github.com/msbaek/code-samples/commit/5b61163047e1d14e959b2ac93915bbf71e208e8b)
 
@@ -95,7 +103,16 @@ public void given_simple_name___returns_simple_name() {
 
 ![](https://api.monosnap.com/rpc/file/download?id=wwPGU74dnLr3sILClWD3QjRd8LoGwa)
 
+constant to variable transformation
+
 이상과 같이 간단한 조건을 추가해서 해결 가능
+
+- 도대체 invert name은 언제 할 것인가 ? 지루하다.
+- 미안혀. 지루해서. 하지만 이게 싸이클이고. 이게 우리가 일하는 방식이다.
+- 가장 단순하고 de-generic 테스트 케이스에서 시작해서 복잡도를 아주 점진적으로 추가하면서 진행한다.
+- 절대 첫번째 테스트 케이스에서 목적을 달성하려 하지 않는다.
+- 바로 본론으로 들어가면 그 테스트를 성공시키기 위해 구현하기도 어려울 뿐 더러, 다른 테스트 케이스를 추가하다 보면 옴짝달싹할 수 없는 상태에 빠진다. - getting stuck
+- gently, softly하게 반복적으로 구현해 나간다.
 
 ##### 3.3 refactoring
 
@@ -115,6 +132,9 @@ public void given_first_last___returns_last_first() {
 ##### 4.2 make it passes
 
 ![](https://api.monosnap.com/rpc/file/download?id=dzNH5JEWZWjlndl1TZl3UVhbCtGSyd)
+
+- split flow
+- add computation
 
 ##### 4.3 refactoring
 
@@ -138,6 +158,10 @@ public void given_simple_name_with_leading_spaces___returns_simple_name() {
 	assertThat(invert(" Name"), is("Name"));
 }
 ```
+
+- 테스트를 추가한 순서가 안 맞았다. 2개의 단어가 있는 경우를 진행하기 전에 이 테스트를 먼저 진행했어야 한다
+- 이렇게 좀 더 복잡한 테스트를 작성하다가 좀 더 단순한 테스트가 생각날 수 있다. 그러면 다음번에 바로 이 테스트들을 추가하면 된다.
+- 복잡한 테스트는 최대한 미뤄야 한다.
 
 ##### 5.2 make it passes
 
@@ -185,7 +209,9 @@ public void given_honorific_and_first_last___returns_last_first() {
 
 ![](https://api.monosnap.com/rpc/file/download?id=gGeSoCIfOJTMXVzRWVV5IRIxv54phP)
 
-array대신 원소를 삭제하기 편한 list로 변환 후 호칭이 있으면 제거
+- array to container transformation.
+	- 첫번째 원소(호칭)을 쉽게 제거할 수 있도록 Array대신 List로 변경
+	- 기존 테스트들이 list로도 잘 도는지 확인
 
 ##### 7.3 refactoring
 
@@ -227,6 +253,8 @@ public void given_post_nominals_exists___post_nominals_stays_at_end() {
 ##### 8.2 make it passes
 
 ![](https://api.monosnap.com/rpc/file/download?id=8aLV0MVpFX472NcKkGteZvxo5cqSDS)
+
+- one-to-many
 
 ##### 8.3 add more failing logical test
 

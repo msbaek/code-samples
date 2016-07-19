@@ -1,0 +1,87 @@
+. stair steps
+  @Test
+	public void canCreateStack() {
+		Stack stack = new Stack();
+	}
+
+. assert first / Fake it till you make it
+fakeit.StackTest uponCreation_stackWillBeEmpty
+
+	@Test
+	public void uponCreation_stackWillBeEmpty() {
+		Stack stack = new Stack();
+		assertThat(stack.isEmpty(), is(true));
+	}
+
+ . 삼각법
+	@Test
+	public void afterPush_stackShouldNotBeEmpty() {
+		Stack stack = new Stack();
+		stack.push(1);
+		assertThat(stack.isEmpty(), is(false));
+	}
+
+. one to many
+  @Test
+	public void afterPushingX_willPopX() {
+		stack.push(1);
+		assertThat(stack.pop(), is(1));
+
+		stack.push(2);
+		assertThat(stack.pop(), is(2));
+	}
+
+  @Test
+	public void afterPushingX_and_Y_willPop_Y_and_X() {
+		stack.push(1);
+		stack.push(2);
+		assertThat(stack.pop(), is(2));
+		assertThat(stack.pop(), is(1));
+	}
+
+. Getting Stuck
+--
+assertThat(wrap("word word", 4), is("word\nword"));
+	return s.replaceAll(" ", "\n");
+--
+assertThat(wrap("a dog", 5), is("a dog"));
+  return s.length() <= width ? s : s.replaceAll(" ", "\n");
+--
+assertThat(wrap("a dog with a bone", 6), is("a dog\nwith a\nbone"));
+  getting stuck
+
+--
+assertWraps(null, 1, "");
+
+		return "";
+--
+assertWraps("", 1, "");
+--
+assertWraps("x", 1, "x");
+		if(s == null)
+			return "";
+		return s;
+
+    refactor test to assertWraps
+--
+assertWraps("xx", 1, "x\nx");
+		if(s == null)
+			return "";
+		if(s.length() <= width)
+			return s;
+		return s.substring(0, width) + "\n" + s.substring(width);
+--
+assertWraps("xxx", 1, "x\nx\nx");
+		return s.substring(0, width) + "\n" + wrap(s.substring(width), width);
+--
+assertWraps("x x", 1, "x\nx");
+		return s.substring(0, width) + "\n" + wrap(s.substring(width).trim(), width);
+--
+assertWraps("x xx", 3, "x\nxx");
+		int breakpoint = s.lastIndexOf(" ", width);
+		if(breakpoint == -1)
+			breakpoint = width;
+		return s.substring(0, breakpoint) + "\n" + wrap(s.substring(breakpoint).trim(), width);
+--
+assertWraps("four score and seven years ago our fathers brought forth upon this continent", 7, "four\nscore\nand\nseven\nyears\nago our\nfathers\nbrought\nforth\nupon\nthis\ncontine\nnt");
+--

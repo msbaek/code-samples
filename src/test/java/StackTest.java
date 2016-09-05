@@ -18,4 +18,18 @@ public class StackTest {
 		assertThat(stack.pop(), is(66));
 		assertThat(stack.pop(), is(99));
 	}
+
+	@Test public void afterPushingX_willPopX__andPushingY_willPopY() {
+		stack.push(99);
+		assertThat(stack.pop(), is(99));
+		stack.push(1);
+		assertThat(stack.pop(), is(1));
+	}
+
+	@Test public void afterPushingX_and_Y_willPopY__andX() {
+		stack.push(99);
+		stack.push(1);
+		assertThat(stack.pop(), is(1));
+		assertThat(stack.pop(), is(99));
+	}
 }

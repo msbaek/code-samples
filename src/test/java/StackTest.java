@@ -16,4 +16,11 @@ public class StackTest {
 		stack.push(99);
 		assertThat(stack.pop(), is(99));
 	}
+
+	@Test public void afterPushingX_willPopX__andPushingY_willPopY() {
+		stack.push(99);
+		assertThat(stack.pop(), is(99));
+		stack.push(1);
+		assertThat(stack.pop(), is(1));
+	}
 }

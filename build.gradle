@@ -4,6 +4,7 @@ buildscript {
         springBootVersion = '1.4.0.RELEASE'
         rxjava_ver = '1.1.1'
         rxandroid_ver = '1.1.0'
+        reactivestreams_ver='1.0.0'
     }
     repositories {
         mavenCentral()
@@ -32,6 +33,7 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile "io.reactivex:rxjava:$rxjava_ver"
     compile "io.reactivex:rxandroid:$rxandroid_ver"
+    compile "org.reactivestreams:reactive-streams:$reactivestreams_ver"
 
     testCompile('de.bechte.junit:junit-hierarchicalcontextrunner:4.12.1')
     testCompile('org.springframework.boot:spring-boot-starter-test')

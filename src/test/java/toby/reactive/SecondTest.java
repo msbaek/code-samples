@@ -16,7 +16,7 @@ public class SecondTest {
 	@Test
 	public void pub_sub_test() {
 		Publisher<Integer> pub = iterPub(Stream.iterate(1, s -> s + 1).limit(10).collect(Collectors.toList()));
-		Publisher<Integer> mapPub = mapPub(pub, (Function<Integer, Integer>) s -> s + 10);
+		Publisher<Integer> mapPub = mapPub(pub, s -> s + 10);
 		Subscriber<Integer> sub = logSub();
 		mapPub.subscribe(sub);
 	}

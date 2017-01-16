@@ -16,10 +16,33 @@ public class SecondTest {
 	@Test
 	public void pub_sub_test() {
 		Publisher<Integer> pub = iterPub(Stream.iterate(1, s -> s + 1).limit(10).collect(Collectors.toList()));
-		Publisher<Integer> mapPub = mapPub(pub, s -> s + 10);
-		Publisher<Integer> map2Pub = mapPub(mapPub, s -> -s);
+//		Publisher<Integer> mapPub = mapPub(pub, s -> s + 10);
+//		Publisher<Integer> map2Pub = mapPub(mapPub, s -> -s);
+		Publisher<Integer> sumPub = sumPub(pub);
 		Subscriber<Integer> sub = logSub();
-		map2Pub.subscribe(sub);
+		sumPub.subscribe(sub);
+	}
+
+	private Publisher<Integer> sumPub(Publisher<Integer> pub) {
+		return new Publisher<Integer>() {
+			@Override
+			public void subscribe(Subscriber<? super Integer> sub) {
+				pub.subscribe(new DelegateSub(sub) {
+					public int sum = 0;
+
+					@Override
+					public void onNext(Integer i) {
+						sum += i;
+					}
+
+					@Override
+					public void onComplete() {
+						sub.onNext(sum);
+						sub.onComplete();
+					}
+				});
+			}
+		};
 	}
 
 	private Publisher<Integer> mapPub(Publisher<Integer> pub, Function<Integer, Integer> f) {

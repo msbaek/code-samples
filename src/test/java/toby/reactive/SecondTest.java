@@ -7,6 +7,7 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -15,8 +16,9 @@ public class SecondTest {
 	@Test
 	public void pub_sub_test() {
 		Publisher<Integer> pub = iterPub(Stream.iterate(1, s -> s + 1).limit(10).collect(Collectors.toList()));
+		Publisher<Integer> mapPub = mapPub(pub, (Function<Integer, Integer>) s -> s + 10);
 		Subscriber<Integer> sub = logSub();
-		pub.subscribe(sub);
+		mapPub.subscribe(sub);
 	}
 
 	private Subscriber<Integer> logSub() {

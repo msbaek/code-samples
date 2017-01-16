@@ -6,6 +6,7 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,28 +14,7 @@ import java.util.stream.Stream;
 public class SecondTest {
 	@Test
 	public void pub_sub_test() {
-		Publisher<Integer> pub = new Publisher<Integer>() {
-			Iterable<Integer> iter = Stream.iterate(1, s -> s + 1).limit(10).collect(Collectors.toList());
-
-			@Override
-			public void subscribe(Subscriber<? super Integer> sub) {
-				sub.onSubscribe(new Subscription() {
-					@Override
-					public void request(long n) {
-						try {
-							iter.forEach(s -> sub.onNext(s));
-							sub.onComplete();
-						} catch (Exception e) {
-							sub.onError(e);
-						}
-					}
-
-					@Override
-					public void cancel() {
-					}
-				});
-			}
-		};
+		Publisher<Integer> pub = iterPub(Stream.iterate(1, s -> s + 1).limit(10).collect(Collectors.toList()));
 
 		Subscriber<Integer> sub = new Subscriber<Integer>() {
 			@Override
@@ -59,5 +39,28 @@ public class SecondTest {
 		};
 
 		pub.subscribe(sub);
+	}
+
+	private Publisher<Integer> iterPub(final List<Integer> iter) {
+		return new Publisher<Integer>() {
+			@Override
+			public void subscribe(Subscriber<? super Integer> sub) {
+				sub.onSubscribe(new Subscription() {
+					@Override
+					public void request(long n) {
+						try {
+							iter.forEach(s -> sub.onNext(s));
+							sub.onComplete();
+						} catch (Exception e) {
+							sub.onError(e);
+						}
+					}
+
+					@Override
+					public void cancel() {
+					}
+				});
+			}
+		};
 	}
 }

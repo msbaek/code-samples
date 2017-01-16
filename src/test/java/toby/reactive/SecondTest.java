@@ -15,8 +15,12 @@ public class SecondTest {
 	@Test
 	public void pub_sub_test() {
 		Publisher<Integer> pub = iterPub(Stream.iterate(1, s -> s + 1).limit(10).collect(Collectors.toList()));
+		Subscriber<Integer> sub = logSub();
+		pub.subscribe(sub);
+	}
 
-		Subscriber<Integer> sub = new Subscriber<Integer>() {
+	private Subscriber<Integer> logSub() {
+		return new Subscriber<Integer>() {
 			@Override
 			public void onSubscribe(Subscription s) {
 				s.request(Long.MAX_VALUE);
@@ -37,8 +41,6 @@ public class SecondTest {
 				log.debug("onComplete");
 			}
 		};
-
-		pub.subscribe(sub);
 	}
 
 	private Publisher<Integer> iterPub(final List<Integer> iter) {

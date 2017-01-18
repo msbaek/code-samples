@@ -34,10 +34,10 @@ public class ThirdTest {
 		};
 		// end of pub
 
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
 		// slow publisher, fast subscriber
 		Publisher subcribeOn_publisher = sub -> {
-//			// 하나 이상의 쓰레드가 요청되면 queue 넣고 대기 시킴
+			ExecutorService executorService = Executors.newSingleThreadExecutor();
+			// // 하나 이상의 쓰레드가 요청되면 queue 넣고 대기 시킴
 			executorService.execute(() -> pub.subscribe(sub));
 		};
 
@@ -45,6 +45,8 @@ public class ThirdTest {
 		// 느린 subscriber(consumer)를 별도의 쓰레드에서 동작시킴
 		Publisher<Integer> publishOn_publisher = sub -> {
 			pub.subscribe(new Subscriber<Integer>() {
+				ExecutorService executorService = Executors.newSingleThreadExecutor();
+
 				@Override
 				public void onSubscribe(Subscription s) {
 					sub.onSubscribe(s);

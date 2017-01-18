@@ -12,6 +12,7 @@ import reactor.core.scheduler.Schedulers;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.time.Duration.ofMillis;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Slf4j
@@ -131,5 +132,18 @@ public class ThirdTest {
 		SECONDS.sleep(1);
 
 		System.out.println("Exit");
+	}
+
+	@Test
+	public void flux_interval() throws InterruptedException {
+		Flux.interval(ofMillis(500))
+			.subscribe(s -> log.debug("onNext: {}", s));
+
+		log.debug("exit");
+
+		SECONDS.sleep(3);
+
+		// user thread: 1개라도 남아 있으면 jvm이 종료 안됨
+		// daemon thread: 남아 있더라도 jvm 종료됨
 	}
 }

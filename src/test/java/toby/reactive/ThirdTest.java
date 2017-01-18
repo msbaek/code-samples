@@ -11,8 +11,10 @@ import reactor.core.scheduler.Schedulers;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static java.time.Duration.ofMillis;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Slf4j
@@ -146,5 +148,52 @@ public class ThirdTest {
 
 		// user thread: 1개라도 남아 있으면 jvm이 종료 안됨
 		// daemon thread: 남아 있더라도 jvm 종료됨
+	}
+
+	@Test
+	public void interval_example() throws InterruptedException {
+		Publisher<Integer> pub = sub -> {
+			sub.onSubscribe(new Subscription() {
+				public int no = 0;
+
+				@Override
+				public void request(long n) {
+					ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+					executor.scheduleAtFixedRate(() -> {
+						sub.onNext(no++);
+					}, 0, 300, MILLISECONDS);
+				}
+
+				@Override
+				public void cancel() {
+
+				}
+			});
+		};
+
+		pub.subscribe(new Subscriber<Integer>() {
+			@Override
+			public void onSubscribe(Subscription s) {
+				log.debug("onSubscribe");
+				s.request(Long.MAX_VALUE);
+			}
+
+			@Override
+			public void onNext(Integer integer) {
+				log.debug("onNext: {}", integer);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				log.debug("onError: {}", t);
+			}
+
+			@Override
+			public void onComplete() {
+				log.debug("onComplete");
+			}
+		});
+
+		SECONDS.sleep(3);
 	}
 }

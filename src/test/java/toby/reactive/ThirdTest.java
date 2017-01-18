@@ -9,10 +9,12 @@ import org.reactivestreams.Subscription;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 @Slf4j
 public class ThirdTest {
 	@Test
-	public void scheduler_example() {
+	public void scheduler_example() throws InterruptedException {
 		Publisher<Integer> pub = sub -> {
 			sub.onSubscribe(new Subscription() {
 				@Override
@@ -35,6 +37,7 @@ public class ThirdTest {
 		// end of pub
 
 		// slow publisher, fast subscriber
+		// 느린 publisher를 별도의 쓰레드에서 동작시킴
 		Publisher subcribeOn_publisher = sub -> {
 			ExecutorService executorService = Executors.newSingleThreadExecutor();
 			// // 하나 이상의 쓰레드가 요청되면 queue 넣고 대기 시킴
@@ -44,7 +47,7 @@ public class ThirdTest {
 		// fast publisher, slow subscriber
 		// 느린 subscriber(consumer)를 별도의 쓰레드에서 동작시킴
 		Publisher<Integer> publishOn_publisher = sub -> {
-			pub.subscribe(new Subscriber<Integer>() {
+			subcribeOn_publisher.subscribe(new Subscriber<Integer>() {
 				ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 				@Override
@@ -94,5 +97,7 @@ public class ThirdTest {
 		});
 
 		log.debug("exit");
+
+		SECONDS.sleep(1);
 	}
 }

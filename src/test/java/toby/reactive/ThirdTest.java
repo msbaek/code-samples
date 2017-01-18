@@ -155,23 +155,61 @@ public class ThirdTest {
 		Publisher<Integer> pub = sub -> {
 			sub.onSubscribe(new Subscription() {
 				public int no = 0;
+				boolean cancelled = false;
 
 				@Override
 				public void request(long n) {
 					ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 					executor.scheduleAtFixedRate(() -> {
+						if(cancelled) {
+							executor.shutdown();
+							return;
+						}
 						sub.onNext(no++);
 					}, 0, 300, MILLISECONDS);
 				}
 
 				@Override
 				public void cancel() {
-
+					cancelled = true;
 				}
 			});
 		};
 
-		pub.subscribe(new Subscriber<Integer>() {
+		Publisher<Integer> takePub = new Publisher<Integer>() {
+			@Override
+			public void subscribe(Subscriber<? super Integer> sub) {
+				pub.subscribe(new Subscriber<Integer>() {
+					private Subscription subscription;
+					int count = 0;
+
+					@Override
+					public void onSubscribe(Subscription subscription) {
+						this.subscription = subscription;
+						sub.onSubscribe(subscription);
+					}
+
+					@Override
+					public void onNext(Integer integer) {
+						sub.onNext(integer);
+						if(++count > 5)
+							subscription.cancel();
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						sub.onError(t);
+					}
+
+					@Override
+					public void onComplete() {
+						sub.onComplete();
+					}
+				});
+			}
+		};
+
+		takePub.subscribe(new Subscriber<Integer>() {
 			@Override
 			public void onSubscribe(Subscription s) {
 				log.debug("onSubscribe");

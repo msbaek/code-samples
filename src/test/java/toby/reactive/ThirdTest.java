@@ -14,6 +14,7 @@ public class ThirdTest {
 			sub.onSubscribe(new Subscription() {
 				@Override
 				public void request(long n) {
+					log.debug("request: {}", n);
 					sub.onNext(1);
 					sub.onNext(2);
 					sub.onNext(3);
@@ -24,6 +25,7 @@ public class ThirdTest {
 
 				@Override
 				public void cancel() {
+					log.debug("cancel");
 				}
 			});
 		};
@@ -50,5 +52,7 @@ public class ThirdTest {
 				log.debug("onComplete");
 			}
 		});
+
+		log.debug("exit");
 	}
 }

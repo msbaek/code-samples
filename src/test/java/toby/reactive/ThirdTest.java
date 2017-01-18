@@ -6,6 +6,8 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,8 +42,8 @@ public class ThirdTest {
 		// slow publisher, fast subscriber
 		// 느린 publisher를 별도의 쓰레드에서 동작시킴
 		// publisher.subscribe()
-		//    publisher가 느려서 별도의 쓰레드에서 호출
-		//    subscribe를 호출해서 이름이 subscribeOn
+		// publisher가 느려서 별도의 쓰레드에서 호출
+		// subscribe를 호출해서 이름이 subscribeOn
 		Publisher subcribeOn_publisher = sub -> {
 			ExecutorService executorService = Executors.newSingleThreadExecutor(new CustomizableThreadFactory() {
 				@Override
@@ -56,8 +58,8 @@ public class ThirdTest {
 		// fast publisher, slow subscriber
 		// 느린 subscriber(consumer)를 별도의 쓰레드에서 동작시킴
 		// subscriber.onNext ...
-		//   subscriber가 느려서 별도의 쓰레드에서 호출
-		//   실제 데이터가 publish되므로 이름이 publishOn
+		// subscriber가 느려서 별도의 쓰레드에서 호출
+		// 실제 데이터가 publish되므로 이름이 publishOn
 		Publisher<Integer> publishOn_publisher = sub -> {
 			subcribeOn_publisher.subscribe(new Subscriber<Integer>() {
 				ExecutorService executorService = Executors.newSingleThreadExecutor(new CustomizableThreadFactory() {
@@ -116,5 +118,18 @@ public class ThirdTest {
 		log.debug("exit");
 
 		SECONDS.sleep(1);
+	}
+
+	@Test
+	public void flux_scheduler() throws InterruptedException {
+		Flux.range(1, 10)
+			.publishOn(Schedulers.newSingle("pub-"))
+			.log()
+			.subscribeOn(Schedulers.newSingle("sub-"))
+			.subscribe(System.out::println);
+
+		SECONDS.sleep(1);
+
+		System.out.println("Exit");
 	}
 }

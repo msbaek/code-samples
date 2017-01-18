@@ -29,8 +29,14 @@ public class ThirdTest {
 				}
 			});
 		};
+		// end of pub
 
-		pub.subscribe(new Subscriber<Integer>() {
+		Publisher subOnPub = sub -> {
+			pub.subscribe(sub);
+		};
+
+		// start of sub
+		subOnPub.subscribe(new Subscriber<Integer>() {
 			@Override
 			public void onSubscribe(Subscription s) {
 				log.debug("onSubscribe");

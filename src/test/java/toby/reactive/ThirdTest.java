@@ -6,6 +6,9 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Slf4j
 public class ThirdTest {
 	@Test
@@ -31,8 +34,10 @@ public class ThirdTest {
 		};
 		// end of pub
 
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
 		Publisher subOnPub = sub -> {
-			pub.subscribe(sub);
+//			// 하나 이상의 쓰레드가 요청되면 queue 넣고 대기 시킴
+			executorService.execute(() -> pub.subscribe(sub));
 		};
 
 		// start of sub

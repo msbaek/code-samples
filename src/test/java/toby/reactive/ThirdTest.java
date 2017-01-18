@@ -137,6 +137,7 @@ public class ThirdTest {
 	@Test
 	public void flux_interval() throws InterruptedException {
 		Flux.interval(ofMillis(500))
+			.take(3)
 			.subscribe(s -> log.debug("onNext: {}", s));
 
 		log.debug("exit");

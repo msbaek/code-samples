@@ -1,5 +1,6 @@
 package toby.reactive;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -7,15 +8,22 @@ import java.util.concurrent.Executors;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+@Slf4j
 public class FourthTest {
 
 	@Test
 	public void future_example() throws InterruptedException {
 		ExecutorService es = Executors.newCachedThreadPool();
 
-		SECONDS.sleep(2);
-		System.out.println("Hello");
+		es.execute(() -> {
+			try {
+				SECONDS.sleep(2);
+			} catch (InterruptedException e) {
+			}
+			log.debug("Hello");
+		});
 
-		System.out.println("Exit");
+		log.debug("Exit");
+		SECONDS.sleep(2);
 	}
 }

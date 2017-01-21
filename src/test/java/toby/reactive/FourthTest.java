@@ -13,13 +13,18 @@ public class FourthTest {
 	interface SuccessCallback {
 		void onSuccess(String res);
 	}
+	interface ExceptionCallback {
+		void onError(Throwable t);
+	}
 
 	public static class CallbackFuture extends FutureTask<String> {
 		private final SuccessCallback successCallback;
+		private ExceptionCallback exceptionCallback;
 
-		public CallbackFuture(Callable<String> callable, SuccessCallback successCallback) {
+		public CallbackFuture(Callable<String> callable, SuccessCallback successCallback, ExceptionCallback exceptionCallback) {
 			super(callable);
 			this.successCallback = successCallback;
+			this.exceptionCallback = exceptionCallback;
 		}
 
 		@Override
@@ -27,9 +32,9 @@ public class FourthTest {
 			try {
 				successCallback.onSuccess(get());
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				Thread.currentThread().interrupt();
 			} catch (ExecutionException e) {
-				e.printStackTrace();
+				exceptionCallback.onError(e.getCause());
 			}
 		}
 	}
@@ -40,9 +45,14 @@ public class FourthTest {
 
 		CallbackFuture f = new CallbackFuture(() -> {
 			SECONDS.sleep(2);
+			if(true)
+				throw new RuntimeException("Error");
 			log.debug("async");
 			return "Hello";
-		}, res -> log.debug("result={}", res));
+		},
+		res -> log.debug("result={}", res),
+		e -> log.error("error message={}", e.getMessage())
+		);
 
 		es.execute(f);
 

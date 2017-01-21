@@ -15,11 +15,22 @@ public class FourthTest {
 	public void future_example() throws InterruptedException, ExecutionException {
 		ExecutorService es = Executors.newCachedThreadPool();
 
-		FutureTask<String> f = new FutureTask<>(() -> {
+		FutureTask<String> f = new FutureTask<String>(() -> {
 			SECONDS.sleep(2);
 			log.debug("Hello");
 			return "Hello";
-		});
+		}) {
+			@Override
+			protected void done() {
+				try {
+					log.debug("result={}", get());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+			}
+		};
 
 		es.execute(f);
 

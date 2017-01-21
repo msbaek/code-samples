@@ -3,10 +3,7 @@ package toby.reactive;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -18,11 +15,13 @@ public class FourthTest {
 	public void future_example() throws InterruptedException, ExecutionException {
 		ExecutorService es = Executors.newCachedThreadPool();
 
-		Future<String> f = es.submit(() -> {
+		FutureTask<String> f = new FutureTask<>(() -> {
 			SECONDS.sleep(2);
 			log.debug("Hello");
 			return "Hello";
 		});
+
+		es.execute(f);
 
 		log.debug("isDone: {}", f.isDone());
 		MILLISECONDS.sleep(2100);

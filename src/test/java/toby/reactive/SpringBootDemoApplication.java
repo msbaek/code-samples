@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.Future;
 
@@ -23,7 +24,7 @@ public class SpringBootDemoApplication {
 	@Component
 	public static class MyService {
 		@Async
-		public Future<String> hello() throws InterruptedException {
+		public ListenableFuture<String> hello() throws InterruptedException {
 			log.info("hello");
 			SECONDS.sleep(2);
 			return new AsyncResult<>("Hello");
@@ -41,9 +42,12 @@ public class SpringBootDemoApplication {
 	@Bean ApplicationRunner run() {
 		return args -> {
 			log.info("run()");
-			Future<String> result = myService.hello();
-			log.info("exit with isDone={}", result.isDone());
-			log.info("result={}", result.get());
+			ListenableFuture<String> f = myService.hello();
+			f.addCallback(
+				s -> log.info("success with result={}", s),
+				e -> log.error("error={}", e.getMessage())
+			);
+			log.info("exit before callback");
 		};
 	}
 }

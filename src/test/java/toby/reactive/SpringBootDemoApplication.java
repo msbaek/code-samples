@@ -25,7 +25,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class SpringBootDemoApplication {
 	@Component
 	public static class MyService {
-		@Async
+//		@Async
+		@Async(value = "taskExecutor")
 		public ListenableFuture<String> hello() throws InterruptedException {
 			log.info("hello");
 			SECONDS.sleep(2);

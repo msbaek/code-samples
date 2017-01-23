@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.Callable;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @SpringBootApplication
@@ -15,10 +17,14 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class SpringBootDemoApplication {
 	@RestController
 	public static class MyController {
-		@GetMapping("/async")
-		public String async() throws InterruptedException {
-			SECONDS.sleep(2);
-			return "Hello from Async";
+		@GetMapping("/callable")
+		public Callable<String> callable() throws InterruptedException {
+			log.info("callable started");
+			return () -> {
+				log.info("first line in lambda");
+				SECONDS.sleep(2);
+				return "Hello from callable";
+			};
 		}
 	}
 

@@ -18,20 +18,19 @@ public class SpringBootDemoApplication {
 	@RestController
 	public static class MyController {
 		@GetMapping("/callable")
-//		public Callable<String> callable() throws InterruptedException {
-//			log.info("callable started");
-//			return () -> {
-//				log.info("first line in lambda");
-//				SECONDS.sleep(2);
-//				return "Hello from callable";
-//			};
-//		}
-
-		public String callable() throws InterruptedException {
-			log.info("first line in lambda");
-			SECONDS.sleep(2);
-			return "Hello from callable";
+		public Callable<String> callable() throws InterruptedException {
+			log.info("callable started");
+			return () -> {
+				log.info("first line in lambda");
+				SECONDS.sleep(2);
+				return "Hello from callable";
+			};
 		}
+//		public String callable() throws InterruptedException {
+//			log.info("first line in lambda");
+//			SECONDS.sleep(2);
+//			return "Hello from callable";
+//		}
 	}
 
 	public static void main(String[] args) {

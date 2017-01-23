@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.concurrent.Callable;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 @SpringBootApplication
 @Slf4j
@@ -17,20 +17,30 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class SpringBootDemoApplication {
 	@RestController
 	public static class MyController {
-		@GetMapping("/callable")
-		public Callable<String> callable() throws InterruptedException {
-			log.info("callable started");
-			return () -> {
-				log.info("first line in lambda");
-				SECONDS.sleep(2);
-				return "Hello from callable";
-			};
+		Queue<DeferredResult<String>> results = new ConcurrentLinkedDeque<>();
+
+		@GetMapping("/dr")
+		public DeferredResult<String> dr() throws InterruptedException {
+			log.info("dr");
+			DeferredResult<String> dr = new DeferredResult<>(600_000L);
+			results.add(dr);
+			return dr;
 		}
-//		public String callable() throws InterruptedException {
-//			log.info("first line in lambda");
-//			SECONDS.sleep(2);
-//			return "Hello from callable";
-//		}
+
+		@GetMapping("/dr/count")
+		public String drcount() {
+			return String.valueOf(results.size());
+		}
+
+		@GetMapping("/dr/event")
+		public String drevent(String msg) {
+			for(DeferredResult<String> dr : results) {
+				dr.setResult("Hello " + msg);
+				results.remove(dr);
+			}
+
+			return "OK";
+		}
 	}
 
 	public static void main(String[] args) {

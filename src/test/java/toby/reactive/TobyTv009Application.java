@@ -9,6 +9,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.AsyncRestTemplate;
+import org.springframework.web.context.request.async.DeferredResult;
 
 /**
  * 토비의 봄 TV 9회 - 스프링 리액티브 웹 개발 5부. 비동기 RestTemplate과 비동기 MVC의 결합
@@ -20,8 +21,17 @@ public class TobyTv009Application {
 		AsyncRestTemplate rt = new AsyncRestTemplate(new Netty4ClientHttpRequestFactory(new NioEventLoopGroup(1)));
 
 		@RequestMapping("/rest")
-		public ListenableFuture<ResponseEntity<String>> rest(int idx) {
-			return rt.getForEntity("http://localhost:8081/service?req={req}", String.class, "hello" + idx);
+		public DeferredResult<String> rest(int idx) {
+			DeferredResult<String> dr = new DeferredResult<>();
+			ListenableFuture<ResponseEntity<String>> f1 = rt.getForEntity(
+					"http://localhost:8081/service?req={req}", String.class, "hello" + idx);
+			f1.addCallback(success -> {
+				dr.setResult(success.getBody() + "/worked");
+			},
+			error -> {
+				dr.setErrorResult(error.getMessage());
+			});
+			return dr;
 		}
 	}
 

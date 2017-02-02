@@ -26,7 +26,16 @@ public class TobyTv009Application {
 			ListenableFuture<ResponseEntity<String>> f1 = rt.getForEntity(
 					"http://localhost:8081/service?req={req}", String.class, "hello" + idx);
 			f1.addCallback(success -> {
-				dr.setResult(success.getBody() + "/worked");
+				ListenableFuture<ResponseEntity<String>> f2 = rt.getForEntity(
+								"http://localhost:8081/service2?req={req}", String.class, success.getBody());
+				f2.addCallback(
+						s -> {
+							dr.setResult(s.getBody());
+						},
+						e -> {
+							dr.setErrorResult(e.getMessage());
+						}
+				);
 			},
 			error -> {
 				dr.setErrorResult(error.getMessage());

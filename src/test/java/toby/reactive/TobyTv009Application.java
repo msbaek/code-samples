@@ -1,8 +1,10 @@
 package toby.reactive;
 
+import io.netty.channel.nio.NioEventLoopGroup;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.Netty4ClientHttpRequestFactory;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +17,7 @@ import org.springframework.web.client.AsyncRestTemplate;
 public class TobyTv009Application {
 	@RestController
 	public static class MyController {
-		AsyncRestTemplate rt = new AsyncRestTemplate();
+		AsyncRestTemplate rt = new AsyncRestTemplate(new Netty4ClientHttpRequestFactory(new NioEventLoopGroup(1)));
 
 		@RequestMapping("/rest")
 		public ListenableFuture<ResponseEntity<String>> rest(int idx) {

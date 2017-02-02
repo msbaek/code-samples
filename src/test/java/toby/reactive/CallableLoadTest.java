@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,18 +16,26 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class CallableLoadTest {
 	static AtomicInteger counter = new AtomicInteger(0);
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, BrokenBarrierException {
 		ExecutorService executorService = Executors.newFixedThreadPool(100);
 
 		RestTemplate restTemplate = new RestTemplate();
 		String url = "http://localhost:8080/rest";
 
-		StopWatch main = new StopWatch();
-		main.start();
+		CyclicBarrier cb = new CyclicBarrier(101);
 
 		for (int i = 0; i < 100; i++) {
 			executorService.execute(() -> {
 				int idx = counter.addAndGet(1);
+
+				try {
+					cb.await();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (BrokenBarrierException e) {
+					e.printStackTrace();
+				}
+
 				log.info("Thread {}", idx);
 
 				StopWatch sw = new StopWatch();
@@ -37,6 +47,11 @@ public class CallableLoadTest {
 				log.info("Elapsed: {} {}", idx, sw.getTotalTimeSeconds());
 			});
 		}
+
+		cb.await();
+
+		StopWatch main = new StopWatch();
+		main.start();
 
 		executorService.shutdown();
 		executorService.awaitTermination(100, SECONDS);

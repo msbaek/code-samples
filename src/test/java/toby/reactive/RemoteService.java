@@ -5,12 +5,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 @SpringBootApplication
 public class RemoteService {
 	@RestController
 	public static class MyController {
 		@RequestMapping("/service")
-		public String rest(String req) {
+		public String rest(String req) throws InterruptedException {
+			SECONDS.sleep(2);
 			return req + "/service";
 		}
 	}

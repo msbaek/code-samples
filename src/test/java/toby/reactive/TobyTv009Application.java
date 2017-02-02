@@ -13,8 +13,8 @@ public class TobyTv009Application {
 	@RestController
 	public static class MyController {
 		@RequestMapping("/rest")
-		public String rest() {
-			return "rest";
+		public String rest(int idx) {
+			return "rest" + idx;
 		}
 	}
 

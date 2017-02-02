@@ -18,7 +18,7 @@ public class CallableLoadTest {
 		ExecutorService executorService = Executors.newFixedThreadPool(100);
 
 		RestTemplate restTemplate = new RestTemplate();
-		String url = "http://localhost:8080/dr";
+		String url = "http://localhost:8080/rest";
 
 		StopWatch main = new StopWatch();
 		main.start();

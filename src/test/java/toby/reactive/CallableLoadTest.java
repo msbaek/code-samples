@@ -25,16 +25,10 @@ public class CallableLoadTest {
 		CyclicBarrier cb = new CyclicBarrier(101);
 
 		for (int i = 0; i < 100; i++) {
-			executorService.execute(() -> {
+			executorService.submit(() -> {
 				int idx = counter.addAndGet(1);
 
-				try {
-					cb.await();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (BrokenBarrierException e) {
-					e.printStackTrace();
-				}
+				cb.await();
 
 				log.info("Thread {}", idx);
 
@@ -45,6 +39,7 @@ public class CallableLoadTest {
 
 				sw.stop();
 				log.info("Elapsed: {} {}", idx, sw.getTotalTimeSeconds());
+				return null;
 			});
 		}
 

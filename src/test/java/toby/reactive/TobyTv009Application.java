@@ -95,7 +95,7 @@ public class TobyTv009Application {
 
 		}
 
-		private void complete(ResponseEntity<String> s) {
+		protected void complete(ResponseEntity<String> s) {
 			if(next != null)
 				next.run(s);
 		}
@@ -103,7 +103,7 @@ public class TobyTv009Application {
 		protected void run(ResponseEntity<String> value) {
 		}
 
-		private void error(Throwable e) {
+		protected void error(Throwable e) {
 		}
 	}
 
@@ -116,12 +116,8 @@ public class TobyTv009Application {
 
 		@Override
 		protected void run(ResponseEntity<String> value) {
-			if(con != null)
-				con.accept(value);
-			else if(fn != null) {
-				ListenableFuture<ResponseEntity<String>> lf = fn.apply(value);
-				lf.addCallback(s -> complete(s), e -> error(e));
-			}
+			ListenableFuture<ResponseEntity<String>> lf = fn.apply(value);
+			lf.addCallback(s -> complete(s), e -> error(e));
 		}
 	}
 
@@ -134,12 +130,7 @@ public class TobyTv009Application {
 
 		@Override
 		protected void run(ResponseEntity<String> value) {
-			if(con != null)
-				con.accept(value);
-			else if(fn != null) {
-				ListenableFuture<ResponseEntity<String>> lf = fn.apply(value);
-				lf.addCallback(s -> complete(s), e -> error(e));
-			}
+			con.accept(value);
 		}
 	}
 

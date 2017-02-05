@@ -70,8 +70,6 @@ public class TobyTv009Application {
 
 	public static class Completion {
 		Completion next;
-		private Consumer<ResponseEntity<String>> con;
-		private Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn;
 
 		public Completion() {
 		}

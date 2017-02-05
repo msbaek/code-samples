@@ -91,13 +91,13 @@ public class TobyTv009Application {
 		}
 
 		public void andAccept(Consumer<ResponseEntity<String>> con) {
-			Completion c = new Completion(con);
+			Completion c = new AcceptCompletion(con);
 			this.next = c;
 
 		}
 
 		public Completion andApply(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
-			Completion c = new Completion(fn);
+			Completion c = new ApplyCompletion(fn);
 			this.next = c;
 			return c;
 

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.util.function.Consumer;
+
 /**
  * 토비의 봄 TV 9회 - 스프링 리액티브 웹 개발 5부. 비동기 RestTemplate과 비동기 MVC의 결합
  */
@@ -30,32 +32,79 @@ public class TobyTv009Application {
 		@RequestMapping("/rest")
 		public DeferredResult<String> rest(int idx) {
 			DeferredResult<String> dr = new DeferredResult<>();
-			ListenableFuture<ResponseEntity<String>> f1 = rt.getForEntity(
-					"http://localhost:8081/service?req={req}", String.class, "hello" + idx);
-			f1.addCallback(success -> {
-				ListenableFuture<ResponseEntity<String>> f2 = rt.getForEntity(
-								"http://localhost:8081/service2?req={req}", String.class, success.getBody());
-				f2.addCallback(
-						s -> {
-							ListenableFuture<String> f3 = myService.work(s.getBody());
-							f3.addCallback(
-									s1 -> {
-										dr.setResult(s1);
-									},
-									e -> {
-										dr.setErrorResult(e.getMessage());
-									}
-							);
-						},
-						e -> {
-							dr.setErrorResult(e.getMessage());
-						}
-				);
-			},
-			error -> {
-				dr.setErrorResult(error.getMessage());
-			});
+			Completion
+				.from(rt.getForEntity("http://localhost:8081/service?req={req}", String.class, "hello" + idx))
+				.andAccept(s -> dr.setResult(s.getBody()))
+				;
+
+//			ListenableFuture<ResponseEntity<String>> f1 = rt.getForEntity(
+//					"http://localhost:8081/service?req={req}", String.class, "hello" + idx);
+//			f1.addCallback(success -> {
+//				ListenableFuture<ResponseEntity<String>> f2 = rt.getForEntity(
+//								"http://localhost:8081/service2?req={req}", String.class, success.getBody());
+//				f2.addCallback(
+//						s -> {
+//							ListenableFuture<String> f3 = myService.work(s.getBody());
+//							f3.addCallback(
+//									s1 -> {
+//										dr.setResult(s1);
+//									},
+//									e -> {
+//										dr.setErrorResult(e.getMessage());
+//									}
+//							);
+//						},
+//						e -> {
+//							dr.setErrorResult(e.getMessage());
+//						}
+//				);
+//			},
+//			error -> {
+//				dr.setErrorResult(error.getMessage());
+//			});
 			return dr;
+		}
+	}
+
+	public static class Completion {
+		Completion next;
+		private Consumer<ResponseEntity<String>> con;
+
+		public Completion(Consumer<ResponseEntity<String>> con) {
+			this.con = con;
+		}
+
+		public Completion() {
+		}
+
+		public static Completion from(ListenableFuture<ResponseEntity<String>> lf) {
+			Completion c = new Completion();
+			lf.addCallback(s -> {
+				c.complete(s);
+			}, e -> {
+				c.error(e);
+			});
+			return c;
+		}
+
+		public void andAccept(Consumer<ResponseEntity<String>> con) {
+			Completion c = new Completion(con);
+			this.next = c;
+
+		}
+
+		private void complete(ResponseEntity<String> s) {
+			if(next != null)
+				next.run(s);
+		}
+
+		private void run(ResponseEntity<String> value) {
+			if(con != null)
+				con.accept(value);
+		}
+
+		private void error(Throwable e) {
+
 		}
 	}
 

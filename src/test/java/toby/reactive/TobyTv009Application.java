@@ -17,6 +17,7 @@ import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * 토비의 봄 TV 9회 - 스프링 리액티브 웹 개발 5부. 비동기 RestTemplate과 비동기 MVC의 결합
@@ -34,6 +35,7 @@ public class TobyTv009Application {
 			DeferredResult<String> dr = new DeferredResult<>();
 			Completion
 				.from(rt.getForEntity("http://localhost:8081/service?req={req}", String.class, "hello" + idx))
+				.andApply(s -> rt.getForEntity("http://localhost:8081/service2?req={req}", String.class, s.getBody()))
 				.andAccept(s -> dr.setResult(s.getBody()))
 				;
 
@@ -69,6 +71,7 @@ public class TobyTv009Application {
 	public static class Completion {
 		Completion next;
 		private Consumer<ResponseEntity<String>> con;
+		private Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn;
 
 		public Completion(Consumer<ResponseEntity<String>> con) {
 			this.con = con;
@@ -77,19 +80,26 @@ public class TobyTv009Application {
 		public Completion() {
 		}
 
+		public Completion(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
+			this.fn = fn;
+		}
+
 		public static Completion from(ListenableFuture<ResponseEntity<String>> lf) {
 			Completion c = new Completion();
-			lf.addCallback(s -> {
-				c.complete(s);
-			}, e -> {
-				c.error(e);
-			});
+			lf.addCallback(s -> c.complete(s), e -> c.error(e));
 			return c;
 		}
 
 		public void andAccept(Consumer<ResponseEntity<String>> con) {
 			Completion c = new Completion(con);
 			this.next = c;
+
+		}
+
+		public Completion andApply(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
+			Completion c = new Completion(fn);
+			this.next = c;
+			return c;
 
 		}
 
@@ -101,6 +111,10 @@ public class TobyTv009Application {
 		private void run(ResponseEntity<String> value) {
 			if(con != null)
 				con.accept(value);
+			else if(fn != null) {
+				ListenableFuture<ResponseEntity<String>> lf = fn.apply(value);
+				lf.addCallback(s -> complete(s), e -> error(e));
+			}
 		}
 
 		private void error(Throwable e) {

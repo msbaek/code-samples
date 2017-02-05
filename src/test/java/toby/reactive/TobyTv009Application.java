@@ -73,15 +73,7 @@ public class TobyTv009Application {
 		private Consumer<ResponseEntity<String>> con;
 		private Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn;
 
-		public Completion(Consumer<ResponseEntity<String>> con) {
-			this.con = con;
-		}
-
 		public Completion() {
-		}
-
-		public Completion(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
-			this.fn = fn;
 		}
 
 		public static Completion from(ListenableFuture<ResponseEntity<String>> lf) {
@@ -108,7 +100,22 @@ public class TobyTv009Application {
 				next.run(s);
 		}
 
-		private void run(ResponseEntity<String> value) {
+		protected void run(ResponseEntity<String> value) {
+		}
+
+		private void error(Throwable e) {
+		}
+	}
+
+	public static class ApplyCompletion extends Completion {
+		private Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn;
+
+		public ApplyCompletion(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
+			this.fn = fn;
+		}
+
+		@Override
+		protected void run(ResponseEntity<String> value) {
 			if(con != null)
 				con.accept(value);
 			else if(fn != null) {
@@ -116,9 +123,23 @@ public class TobyTv009Application {
 				lf.addCallback(s -> complete(s), e -> error(e));
 			}
 		}
+	}
 
-		private void error(Throwable e) {
+	public static class AcceptCompletion extends Completion {
+		private Consumer<ResponseEntity<String>> con;
 
+		public AcceptCompletion(Consumer<ResponseEntity<String>> con) {
+			this.con = con;
+		}
+
+		@Override
+		protected void run(ResponseEntity<String> value) {
+			if(con != null)
+				con.accept(value);
+			else if(fn != null) {
+				ListenableFuture<ResponseEntity<String>> lf = fn.apply(value);
+				lf.addCallback(s -> complete(s), e -> error(e));
+			}
 		}
 	}
 

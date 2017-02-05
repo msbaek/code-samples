@@ -36,6 +36,7 @@ public class TobyTv009Application {
 			Completion
 				.from(rt.getForEntity("http://localhost:8081/service?req={req}", String.class, "hello" + idx))
 				.andApply(s -> rt.getForEntity("http://localhost:8081/service2?req={req}", String.class, s.getBody()))
+				.andError(e -> dr.setErrorResult(e.toString()))
 				.andAccept(s -> dr.setResult(s.getBody()))
 				;
 
@@ -80,10 +81,15 @@ public class TobyTv009Application {
 			return c;
 		}
 
+		public Completion andError(Consumer<Throwable> eCon) {
+			Completion c = new ErrorCompletion(eCon);
+			this.next = c;
+			return c;
+		}
+
 		public void andAccept(Consumer<ResponseEntity<String>> con) {
 			Completion c = new AcceptCompletion(con);
 			this.next = c;
-
 		}
 
 		public Completion andApply(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
@@ -102,6 +108,8 @@ public class TobyTv009Application {
 		}
 
 		protected void error(Throwable e) {
+			if(next != null)
+				next.error(e);
 		}
 	}
 
@@ -129,6 +137,25 @@ public class TobyTv009Application {
 		@Override
 		protected void run(ResponseEntity<String> value) {
 			con.accept(value);
+		}
+	}
+
+	public static class ErrorCompletion extends Completion {
+		private Consumer<Throwable> eCon;
+
+		public ErrorCompletion(Consumer<Throwable> eCon) {
+			this.eCon = eCon;
+		}
+
+		@Override
+		protected void run(ResponseEntity<String> value) {
+			if(next != null)
+				next.run(value);
+		}
+
+		@Override
+		protected void error(Throwable e) {
+			eCon.accept(e);
 		}
 	}
 

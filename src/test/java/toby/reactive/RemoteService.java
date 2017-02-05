@@ -14,7 +14,8 @@ public class RemoteService {
 		@RequestMapping("/service")
 		public String rest(String req) throws InterruptedException {
 			SECONDS.sleep(2);
-			return req + "/service1";
+			throw new RuntimeException("error in rest");
+//			return req + "/service1";
 		}
 
 		@RequestMapping("/service2")

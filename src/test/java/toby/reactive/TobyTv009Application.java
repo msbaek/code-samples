@@ -1,6 +1,7 @@
 package toby.reactive;
 
 import io.netty.channel.nio.NioEventLoopGroup;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import javax.validation.constraints.NotNull;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -24,21 +26,23 @@ import java.util.function.Function;
  */
 @SpringBootApplication
 public class TobyTv009Application {
-	@RestController
-	public static class MyController {
-		AsyncRestTemplate rt = new AsyncRestTemplate(new Netty4ClientHttpRequestFactory(new NioEventLoopGroup(1)));
+    @RestController
+    @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+    public static class MyController {
+        AsyncRestTemplate rt = new AsyncRestTemplate(new Netty4ClientHttpRequestFactory(new NioEventLoopGroup(1)));
 
-		@Autowired MyService myService;
+        @NotNull
+        MyService myService;
 
-		@RequestMapping("/rest")
-		public DeferredResult<String> rest(int idx) {
-			DeferredResult<String> dr = new DeferredResult<>();
-			Completion
-				.from(rt.getForEntity("http://localhost:8081/service?req={req}", String.class, "hello" + idx))
-				.andApply(s -> rt.getForEntity("http://localhost:8081/service2?req={req}", String.class, s.getBody()))
-				.andError(e -> dr.setErrorResult(e.toString()))
-				.andAccept(s -> dr.setResult(s.getBody()))
-				;
+        @RequestMapping("/rest")
+        public DeferredResult<String> rest(int idx) {
+            DeferredResult<String> dr = new DeferredResult<>();
+            Completion
+                    .from(rt.getForEntity("http://localhost:8081/service?req={req}", String.class, "hello" + idx))
+                    .andApply(s -> rt.getForEntity("http://localhost:8081/service2?req={req}", String.class, s.getBody()))
+                    .andError(e -> dr.setErrorResult(e.toString()))
+                    .andAccept(s -> dr.setResult(s.getBody()))
+            ;
 
 //			ListenableFuture<ResponseEntity<String>> f1 = rt.getForEntity(
 //					"http://localhost:8081/service?req={req}", String.class, "hello" + idx);
@@ -65,117 +69,117 @@ public class TobyTv009Application {
 //			error -> {
 //				dr.setErrorResult(error.getMessage());
 //			});
-			return dr;
-		}
-	}
+            return dr;
+        }
+    }
 
-	public static class Completion {
-		Completion next;
+    public static class Completion {
+        Completion next;
 
-		public Completion() {
-		}
+        public Completion() {
+        }
 
-		public static Completion from(ListenableFuture<ResponseEntity<String>> lf) {
-			Completion c = new Completion();
-			lf.addCallback(s -> c.complete(s), e -> c.error(e));
-			return c;
-		}
+        public static Completion from(ListenableFuture<ResponseEntity<String>> lf) {
+            Completion c = new Completion();
+            lf.addCallback(s -> c.complete(s), e -> c.error(e));
+            return c;
+        }
 
-		public Completion andError(Consumer<Throwable> eCon) {
-			Completion c = new ErrorCompletion(eCon);
-			this.next = c;
-			return c;
-		}
+        public Completion andError(Consumer<Throwable> eCon) {
+            Completion c = new ErrorCompletion(eCon);
+            this.next = c;
+            return c;
+        }
 
-		public void andAccept(Consumer<ResponseEntity<String>> con) {
-			Completion c = new AcceptCompletion(con);
-			this.next = c;
-		}
+        public void andAccept(Consumer<ResponseEntity<String>> con) {
+            Completion c = new AcceptCompletion(con);
+            this.next = c;
+        }
 
-		public Completion andApply(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
-			Completion c = new ApplyCompletion(fn);
-			this.next = c;
-			return c;
+        public Completion andApply(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
+            Completion c = new ApplyCompletion(fn);
+            this.next = c;
+            return c;
 
-		}
+        }
 
-		protected void complete(ResponseEntity<String> s) {
-			if(next != null)
-				next.run(s);
-		}
+        protected void complete(ResponseEntity<String> s) {
+            if (next != null)
+                next.run(s);
+        }
 
-		protected void run(ResponseEntity<String> value) {
-		}
+        protected void run(ResponseEntity<String> value) {
+        }
 
-		protected void error(Throwable e) {
-			if(next != null)
-				next.error(e);
-		}
-	}
+        protected void error(Throwable e) {
+            if (next != null)
+                next.error(e);
+        }
+    }
 
-	public static class ApplyCompletion extends Completion {
-		private Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn;
+    public static class ApplyCompletion extends Completion {
+        private Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn;
 
-		public ApplyCompletion(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
-			this.fn = fn;
-		}
+        public ApplyCompletion(Function<ResponseEntity<String>, ListenableFuture<ResponseEntity<String>>> fn) {
+            this.fn = fn;
+        }
 
-		@Override
-		protected void run(ResponseEntity<String> value) {
-			ListenableFuture<ResponseEntity<String>> lf = fn.apply(value);
-			lf.addCallback(s -> complete(s), e -> error(e));
-		}
-	}
+        @Override
+        protected void run(ResponseEntity<String> value) {
+            ListenableFuture<ResponseEntity<String>> lf = fn.apply(value);
+            lf.addCallback(s -> complete(s), e -> error(e));
+        }
+    }
 
-	public static class AcceptCompletion extends Completion {
-		private Consumer<ResponseEntity<String>> con;
+    public static class AcceptCompletion extends Completion {
+        private Consumer<ResponseEntity<String>> con;
 
-		public AcceptCompletion(Consumer<ResponseEntity<String>> con) {
-			this.con = con;
-		}
+        public AcceptCompletion(Consumer<ResponseEntity<String>> con) {
+            this.con = con;
+        }
 
-		@Override
-		protected void run(ResponseEntity<String> value) {
-			con.accept(value);
-		}
-	}
+        @Override
+        protected void run(ResponseEntity<String> value) {
+            con.accept(value);
+        }
+    }
 
-	public static class ErrorCompletion extends Completion {
-		private Consumer<Throwable> eCon;
+    public static class ErrorCompletion extends Completion {
+        private Consumer<Throwable> eCon;
 
-		public ErrorCompletion(Consumer<Throwable> eCon) {
-			this.eCon = eCon;
-		}
+        public ErrorCompletion(Consumer<Throwable> eCon) {
+            this.eCon = eCon;
+        }
 
-		@Override
-		protected void run(ResponseEntity<String> value) {
-			if(next != null)
-				next.run(value);
-		}
+        @Override
+        protected void run(ResponseEntity<String> value) {
+            if (next != null)
+                next.run(value);
+        }
 
-		@Override
-		protected void error(Throwable e) {
-			eCon.accept(e);
-		}
-	}
+        @Override
+        protected void error(Throwable e) {
+            eCon.accept(e);
+        }
+    }
 
-	@Service
-	public static class MyService {
-		public ListenableFuture<String> work(String req) {
-			return new AsyncResult<>(req + "/asyncwork");
-		}
-	}
+    @Service
+    public static class MyService {
+        public ListenableFuture<String> work(String req) {
+            return new AsyncResult<>(req + "/asyncwork");
+        }
+    }
 
-	@Bean
-	public ThreadPoolTaskExecutor myThreadPool() {
-		ThreadPoolTaskExecutor te = new ThreadPoolTaskExecutor();
-		te.setCorePoolSize(1);
-		te.setMaxPoolSize(10);
-		te.initialize();
-		return te;
-	}
+    @Bean
+    public ThreadPoolTaskExecutor myThreadPool() {
+        ThreadPoolTaskExecutor te = new ThreadPoolTaskExecutor();
+        te.setCorePoolSize(1);
+        te.setMaxPoolSize(10);
+        te.initialize();
+        return te;
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(TobyTv009Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TobyTv009Application.class, args);
+    }
 }

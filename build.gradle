@@ -4,7 +4,7 @@ buildscript {
         rxjava_ver = '1.1.1'
         rxandroid_ver = '1.1.0'
         reactivestreams_ver='1.0.0'
-        projectreactor_ver='3.0.4.RELEASE'
+        projectreactor_ver='3.0.7.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -41,6 +41,7 @@ dependencies {
     compile "io.reactivex:rxandroid:$rxandroid_ver"
     compile "org.reactivestreams:reactive-streams:$reactivestreams_ver"
     compile "io.projectreactor:reactor-core:$projectreactor_ver"
+//    compile "io.projectreactor:reactor-bus:2.0.8.RELEASE"
     compile "org.projectlombok:lombok:1.16.10"
     compile "io.netty:netty-all:4.1.7.Final"
     compile 'commons-codec:commons-codec:1.10'

@@ -1,4 +1,4 @@
-package java8_concurrency;
+package java8.java8_concurrency;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package java8_concurrency;
+package java8.java8_concurrency;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.LongAdder;
 import java.util.function.LongBinaryOperator;
 
 import static java.util.stream.IntStream.range;
-import static java8_concurrency.ExecutorServiceUtil.stop;
+import static java8.java8_concurrency.ExecutorServiceUtil.stop;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 

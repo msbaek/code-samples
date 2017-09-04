@@ -1,4 +1,4 @@
-package read_large_csv_with_java8;
+package java8.read_large_csv_with_java8;
 
 import java.io.*;
 import java.util.ArrayList;

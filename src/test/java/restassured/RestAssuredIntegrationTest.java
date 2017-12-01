@@ -102,6 +102,8 @@ public class RestAssuredIntegrationTest {
     }
 
     private static String getEventJson() {
+        //language=JSON
+        String s = "{\"name\":\"title\"}";
         return Util.inputStreamToString(RestAssuredIntegrationTest.class
                 .getResourceAsStream("/event_0.json"));
     }

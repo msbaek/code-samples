@@ -5,6 +5,7 @@ buildscript {
         rxandroid_ver = '1.1.0'
         reactivestreams_ver='1.0.0'
         projectreactor_ver='3.0.7.RELEASE'
+        kotlin_version = '1.2.0'
     }
     repositories {
         mavenCentral()
@@ -13,13 +14,16 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
     }
 }
 
+apply plugin: 'kotlin'
+apply plugin: 'application'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
- apply plugin: 'io.spring.dependency-management'
+apply plugin: 'io.spring.dependency-management'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -30,9 +34,11 @@ repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/snapshot" }
     maven { url "https://repo.spring.io/milestone" }
+    maven { url "http://repository.jetbrains.com/all" }
 }
 
 dependencies {
+    compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}")
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-webflux')
     compile('org.springframework.boot:spring-boot-starter-web')
@@ -54,4 +60,7 @@ dependencies {
     testCompile 'io.rest-assured:json-schema-validator:3.0.1'
     testCompile 'com.github.fge:json-schema-validator:2.2.6'
     testCompile 'com.github.fge:json-schema-core:1.2.5'
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile "org.jetbrains.spek:spek-api:1.1.5"
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.1"
 }

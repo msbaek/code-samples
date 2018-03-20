@@ -10,14 +10,15 @@ class SimpleTests {
         var calculator = SampleCalculator()
 
         @Test fun `2 수의 합을 반환해야 한다`() {
-            val sum = calculator.sum(i = 2, i1 = 4)
+            val sum = calculator.sum(2, 4)
             assertEquals(6, sum)
         }
     }
-}
 
-class SampleCalculator {
-    fun sum(i: Int, i1: Int): Int {
-        return i + i1
+    @Test
+    fun `2수의 차를 반환해야 한다`() {
+        val c = SampleCalculator()
+        val res = c.sub(6, 2)
+        assertEquals(4, res)
     }
 }

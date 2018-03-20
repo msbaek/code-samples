@@ -1,9 +1,9 @@
 package spek_demo
 
-import org.jetbrains.spek.api.Spek
+//import org.jetbrains.spek.api.Spek
 import kotlin.test.assertEquals
 
-class TestSource : Spek({
+//class TestSource : Spek({
 //    describe("playing rock paper scissors") {
 //        val game = RockPaperScissors()
 //
@@ -23,4 +23,4 @@ class TestSource : Spek({
 //            }
 //        }
 //    }
-})
+//})

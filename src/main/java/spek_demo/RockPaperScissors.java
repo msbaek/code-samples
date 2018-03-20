@@ -1,16 +1,16 @@
 package spek_demo;
 
-import org.jetbrains.annotations.NotNull;
-
-public class RockPaperScissors {
-    public void recordMove(@NotNull Player player, @NotNull Move move) {
-    }
-
-    @NotNull
-    public String getResult() {
-        return null;
-    }
-}
+//import org.jetbrains.annotations.NotNull;
+//
+//public class RockPaperScissors {
+//    public void recordMove(@NotNull Player player, @NotNull Move move) {
+//    }
+//
+//    @NotNull
+//    public String getResult() {
+//        return null;
+//    }
+//}
 
 //class RockPaperScissors {
 //    fun recordMove(player: Player, move: Move) {
@@ -21,4 +21,3 @@ public class RockPaperScissors {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
 //}
-

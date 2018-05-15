@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="10 seconds">
+	
+	<appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}][%25logger{0}][%5level]%X{pid} %m%n</pattern>		
+		</encoder>
+	</appender>
+	
+	<property name="LOG_HOME" value="./logs" />
+	
+	<appender name="APPLICATION_LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/stdApp.log</file>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/stdApp.%d{yyyy-MM-dd}</fileNamePattern>
+			<maxHistory>10</maxHistory>
+			<maxHistory>1</maxHistory>
+		</rollingPolicy>	
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}][%25logger{0}][%5level]%X{pid} %m%n</pattern>
+		</encoder>
+	</appender>
+
+
+	<!-- appender for framework logger -->
+	<appender name="FRAMEWORK_LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_HOME}/framework.log</File>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/framework.log.%i</fileNamePattern>			
+			<maxIndex>10</maxIndex>
+		</rollingPolicy>		
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>100MB</maxFileSize>
+		</triggeringPolicy>
+		
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}][%25logger{0}][%5level]%X{pid} %m%n</pattern>
+		</encoder>
+	</appender>
+	
+
+	<!-- apache Log -->
+	<logger name="httpclient.wire.content" level="ERROR"/>
+
+	<logger name="httpclient.wire.header" level="ERROR"/>
+
+	<logger name="net.htmlparser.jericho" level="ERROR"/>
+
+	<logger name="com.jakartaproject"  level="ERROR"/>
+
+	<logger name="org.apache.jsp" level="DEBUG"/>
+
+	<logger name="org.apache.catalina" level="ERROR"/>
+
+	<logger name="org.apache"  level="ERROR"/>
+
+	<!-- Spring Log -->
+	<logger name="org.springframework.web.context.support.XmlWebApplicationContext"  level="WARN">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+	<logger name="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"  level="WARN">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+	<logger name="org.springframework.web.servlet.DispatcherServlet" level="INFO">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+	<logger name="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" level="INFO">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+	<logger name="org.springframework.session.web.http.SessionRepositoryFilter" level="INFO">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+
+	<logger name="org.springframework.web.servlet.view" level="DEBUG">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+	<logger name="org.springframework.security.web" level="DEBUG">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+	<logger name="org.springframework.aop.framework" level="INFO">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+
+	<logger name="org.springframework.core"  level="INFO">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+	<logger name="org.springframework.context" level="INFO">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+
+	<logger name="org.springframework.transaction.annotation" level="WARN">
+		<appender-ref ref="FRAMEWORK_LOGGER" />
+	</logger>
+	
+	<!-- REDIS 관련  -->
+	<logger name="org.springframework.data.redis.core.RedisTemplate" level="DEBUG">
+		<appender-ref ref="APPLICATION_LOGGER" />
+	</logger>
+	<logger name="org.springframework.data.redis.core.HashOperations" level="DEBUG">
+		<appender-ref ref="APPLICATION_LOGGER" />
+	</logger>
+	<logger name="org.springframework.data.redis.core.ZSetOperations" level="DEBUG">
+		<appender-ref ref="APPLICATION_LOGGER" />
+	</logger>
+	
+	<logger name="com.kakaopay.coupon"  level="DEBUG">
+		<appender-ref ref="APPLICATION_LOGGER" />
+	</logger>
+
+	<root level ="DEBUG"  >
+		<appender-ref ref="CONSOLE_APPENDER" />
+	</root>
+</configuration>

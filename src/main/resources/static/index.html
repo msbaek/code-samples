@@ -1,0 +1,68 @@
+<!-- https://github.com/Guysbert/vue-rapid-protoyping/ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapid Prototyping Vue.js </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        .weak {
+            opacity: 0.5;
+            font-size: 0.8em;
+        }
+
+        .match {
+            opacity: 0.5;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<div id="zip-loader">
+    <div class="row">
+        <form>
+            <label for="zip">Zip:</label>
+            <input v-on:keyUp="parseZip" v-model="zip" type="text" placeholder="Insert ZIP"/>
+            <span class="weak hidden">Loading...</span>
+        </form>
+    </div>
+    <div class="row">
+        <label for="city">City</label>
+        <span>Matching City:</span> <span class="match">{{ city }}</span>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    new Vue({
+        el: '#zip-loader',
+        data: {
+            city: 'Insert zip to display matching city',
+            zip: ''
+        },
+        methods: {
+            parseZip: function () {
+                const myApp = this;
+                if (this.zip.length === 5) {
+                    axios.get(`http://api.zippopotam.us/de/${this.zip}`).then(function (response) {
+                        myApp.city = response.data.places[0]['place name'];
+                    })
+                        .catch(function () {
+                            myApp.city = 'Not a valid zip code';
+                        })
+                }
+            }
+        }
+    });
+</script>
+</html>

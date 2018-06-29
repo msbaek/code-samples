@@ -53,6 +53,7 @@ dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile 'org.apache.kafka:kafka-streams:1.0.0'
     compile 'org.apache.kafka:kafka-clients:1.0.0'
+    compile 'com.jayway.jsonpath:json-path:2.4.0'
 
     testCompile('de.bechte.junit:junit-hierarchicalcontextrunner:4.12.1')
     testCompile('org.springframework.boot:spring-boot-starter-test')

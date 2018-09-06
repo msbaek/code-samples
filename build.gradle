@@ -68,4 +68,6 @@ dependencies {
 //    testCompile "org.jetbrains.spek:spek-api:1.1.5"
     testCompile "org.junit.jupiter:junit-jupiter-api:${junit5_version}"
     testCompile "org.junit.jupiter:junit-jupiter-params:${junit5_version}"
+    testCompile "io.cucumber:cucumber-java:3.0.2"
+    testCompile "io.cucumber:cucumber-junit:3.0.2"
 }

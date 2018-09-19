@@ -70,4 +70,5 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-params:${junit5_version}"
     testCompile "io.cucumber:cucumber-java:3.0.2"
     testCompile "io.cucumber:cucumber-junit:3.0.2"
+    testCompile "org.springframework.retry:spring-retry:1.2.2.RELEASE"
 }

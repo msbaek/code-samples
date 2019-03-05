@@ -18,13 +18,19 @@ public class MailingListServer {
     private static MailSender mailSender;
     private static Session session;
     private static MailForwarder mailForwarder;
+    private static Store store;
+    private static Folder folder;
+    private static MailReceiver mailReceiver;
 
     public MailingListServer() {
         mailSender = new MailSender();
         mailForwarder = new MailForwarder();
+        store = null;
+        folder = null;
+        mailReceiver = new MailReceiver();
     }
 
-    public static void main(String[] args) throws MessagingException {
+    public static void main(String[] args) {
         if (args.length != 8) {
             System.err.println("Usage: java MailingList <popHost> " +
                     "<smtpHost> <pop3user> <pop3password> " +
@@ -47,40 +53,9 @@ public class MailingListServer {
             return;
         }
 
-        Properties properties = System.getProperties();
-
-        Folder folder = null;
-        Store store = null;
-
         try {
             while (true) {
-                session = Session.getDefaultInstance(properties, null);
-                store = session.getStore("pop3");
-                store.connect(host.pop3Host, -1, host.pop3User, host.pop3Password);
-                Folder defaultFolder = store.getDefaultFolder();
-                if (defaultFolder == null) {
-                    System.err.println("Unable to open default folder");
-                    return;
-                }
-                folder = defaultFolder.getFolder("INBOX");
-                if (folder == null) {
-                    System.err.println("Unable to get: "
-                            + defaultFolder);
-                    return;
-                }
-                folder.open(Folder.READ_WRITE);
-                if (folder.getMessageCount() != 0) {
-                    Message[] messages = folder.getMessages();
-                    FetchProfile fp = new FetchProfile();
-                    fp.add(FetchProfile.Item.ENVELOPE);
-                    fp.add(FetchProfile.Item.FLAGS);
-                    fp.add("X-Mailer");
-                    folder.fetch(messages, fp);
-                    for (Message message : messages) {
-                        mailForwarder.processMessage(message);
-                    }
-                }
-                System.err.print(".");
+                mailReceiver.checkMail();
                 try {
                     Thread.sleep(interval * 1000);
                 } catch (InterruptedException e) {
@@ -90,8 +65,12 @@ public class MailingListServer {
             System.err.println("message handling error");
             e.printStackTrace(System.err);
         } finally {
-            folder.close(true);
-            store.close();
+            try {
+                folder.close(true);
+                store.close();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -129,7 +108,7 @@ public class MailingListServer {
             InternetAddress from = result;
             MimeMessage forward = new MimeMessage(session);
             forward.setFrom(from);
-            forward.setReplyTo(new Address[]{ new InternetAddress(listAddress)});
+            forward.setReplyTo(new Address[]{new InternetAddress(listAddress)});
             forward.addRecipients(Message.RecipientType.TO, listAddress);
             forward.addRecipients(Message.RecipientType.BCC, roster.getAddresses());
             String subject = message.getSubject();
@@ -144,6 +123,39 @@ public class MailingListServer {
             else
                 forward.setText((String) content);
             return forward;
+        }
+    }
+
+    private static class MailReceiver {
+        public void checkMail() throws MessagingException, IOException {
+            Properties properties = System.getProperties();
+            session = Session.getDefaultInstance(properties, null);
+            store = session.getStore("pop3");
+            store.connect(host.pop3Host, -1, host.pop3User, host.pop3Password);
+            Folder defaultFolder = store.getDefaultFolder();
+            folder = defaultFolder.getFolder("INBOX");
+            if (defaultFolder != null) {
+                System.err.println("Unable to open default folder");
+                return;
+            }
+            if (folder == null) {
+                System.err.println("Unable to get: " + defaultFolder);
+                return;
+            }
+            folder.open(Folder.READ_WRITE);
+            if (folder.getMessageCount() != 0) {
+                Message[] messages = folder.getMessages();
+                FetchProfile fp = new FetchProfile();
+                fp.add(FetchProfile.Item.ENVELOPE);
+                fp.add(FetchProfile.Item.FLAGS);
+                fp.add("X-Mailer");
+                folder.fetch(messages, fp);
+                for (Message message : messages) {
+                    mailForwarder.processMessage(message);
+                }
+            }
+            System.err.print(".");
+            return;
         }
     }
 }

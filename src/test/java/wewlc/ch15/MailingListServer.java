@@ -1,8 +1,11 @@
 package wewlc.ch15;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Properties;
 
 public class MailingListServer {
@@ -13,9 +16,12 @@ public class MailingListServer {
     private static int interval;
     private static Roster roster;
     private static MailSender mailSender;
+    private static Session session;
+    private static MailForwarder mailForwarder;
 
     public MailingListServer() {
         mailSender = new MailSender();
+        mailForwarder = new MailForwarder();
     }
 
     public static void main(String[] args) throws MessagingException {
@@ -48,7 +54,7 @@ public class MailingListServer {
 
         try {
             while (true) {
-                Session session = Session.getDefaultInstance(properties, null);
+                session = Session.getDefaultInstance(properties, null);
                 store = session.getStore("pop3");
                 store.connect(host.pop3Host, -1, host.pop3User, host.pop3Password);
                 Folder defaultFolder = store.getDefaultFolder();
@@ -70,37 +76,8 @@ public class MailingListServer {
                     fp.add(FetchProfile.Item.FLAGS);
                     fp.add("X-Mailer");
                     folder.fetch(messages, fp);
-                    for (int i = 0; i < messages.length; i++) {
-                        Message message = messages[i];
-                        if (message.getFlags().contains(Flags.Flag.DELETED))
-                            continue;
-                        System.out.println("message received: " + message.getSubject());
-                        if (!roster.containsOneOf(message.getFrom()))
-                            continue;
-                        MimeMessage forward = new MimeMessage(session);
-                        InternetAddress result = null;
-                        Address[] fromAddress = message.getFrom();
-                        if (fromAddress != null && fromAddress.length > 0)
-                            result = new InternetAddress(fromAddress[0].toString());
-                        InternetAddress from = result;
-                        forward.setFrom(from);
-                        forward.setReplyTo(new Address[]{ new InternetAddress(listAddress)});
-                        forward.addRecipients(Message.RecipientType.TO, listAddress);
-                        forward.addRecipients(Message.RecipientType.BCC, roster.getAddresses());
-                        String subject = message.getSubject();
-                        if (!message.getSubject().contains(SUBJECT_MARKER))
-                            subject = SUBJECT_MARKER + " " + message.getSubject();
-                        forward.setSubject(subject);
-                        forward.setSentDate(message.getSentDate());
-                        forward.addHeader(LOOP_HEADER, listAddress);
-                        Object content = message.getContent();
-                        if (content instanceof Multipart)
-                            forward.setContent((Multipart) content);
-                        else
-                            forward.setText((String) content);
-
-                        mailSender.sendMail(forward);
-                        message.setFlag(Flags.Flag.DELETED, true);
+                    for (Message message : messages) {
+                        mailForwarder.processMessage(message);
                     }
                 }
                 System.err.print(".");
@@ -127,6 +104,46 @@ public class MailingListServer {
             Transport transport = smtpSession.getTransport("smtp");
             transport.connect(host.smtpHost, host.smtpUser, host.smtpPassword);
             transport.sendMessage(forward, roster.getAddresses());
+        }
+    }
+
+    private static class MailForwarder {
+        public boolean processMessage(Message message) throws MessagingException, IOException {
+            if (message.getFlags().contains(Flags.Flag.DELETED))
+                return true;
+            System.out.println("message received: " + message.getSubject());
+            if (!roster.containsOneOf(message.getFrom()))
+                return true;
+            MimeMessage forward = createForwardMessage(message);
+            mailSender.sendMail(forward);
+            message.setFlag(Flags.Flag.DELETED, true);
+            return false;
+        }
+
+        @NotNull
+        private MimeMessage createForwardMessage(Message message) throws MessagingException, IOException {
+            InternetAddress result = null;
+            Address[] fromAddress = message.getFrom();
+            if (fromAddress != null && fromAddress.length > 0)
+                result = new InternetAddress(fromAddress[0].toString());
+            InternetAddress from = result;
+            MimeMessage forward = new MimeMessage(session);
+            forward.setFrom(from);
+            forward.setReplyTo(new Address[]{ new InternetAddress(listAddress)});
+            forward.addRecipients(Message.RecipientType.TO, listAddress);
+            forward.addRecipients(Message.RecipientType.BCC, roster.getAddresses());
+            String subject = message.getSubject();
+            if (!message.getSubject().contains(SUBJECT_MARKER))
+                subject = SUBJECT_MARKER + " " + message.getSubject();
+            forward.setSubject(subject);
+            forward.setSentDate(message.getSentDate());
+            forward.addHeader(LOOP_HEADER, listAddress);
+            Object content = message.getContent();
+            if (content instanceof Multipart)
+                forward.setContent((Multipart) content);
+            else
+                forward.setText((String) content);
+            return forward;
         }
     }
 }

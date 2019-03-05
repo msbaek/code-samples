@@ -21,6 +21,7 @@ public class MailingListServer {
     private static Store store;
     private static Folder folder;
     private static MailReceiver mailReceiver;
+    private static ListDriver listDriver;
 
     public MailingListServer() {
         mailSender = new MailSender();
@@ -28,6 +29,7 @@ public class MailingListServer {
         store = null;
         folder = null;
         mailReceiver = new MailReceiver();
+        listDriver = new ListDriver();
     }
 
     public static void main(String[] args) {
@@ -55,11 +57,7 @@ public class MailingListServer {
 
         try {
             while (true) {
-                mailReceiver.checkMail();
-                try {
-                    Thread.sleep(interval * 1000);
-                } catch (InterruptedException e) {
-                }
+                listDriver.run();
             }
         } catch (Exception e) {
             System.err.println("message handling error");
@@ -156,6 +154,20 @@ public class MailingListServer {
             }
             System.err.print(".");
             return;
+        }
+    }
+
+    private static class ListDriver {
+        private void run() throws MessagingException, IOException {
+            mailReceiver.checkMail();
+            sleep();
+        }
+
+        private void sleep() {
+            try {
+                Thread.sleep(interval * 1000);
+            } catch (InterruptedException e) {
+            }
         }
     }
 }

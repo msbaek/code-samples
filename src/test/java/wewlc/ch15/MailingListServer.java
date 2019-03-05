@@ -8,6 +8,10 @@ import java.util.Properties;
 public class MailingListServer {
     public static final String SUBJECT_MARKER = "[list]";
     public static final String LOOP_HEADER = "X-Loop";
+    private static HostInformation host;
+    private static String listAddress;
+    private static int interval;
+    private static Roster roster;
 
     public static void main(String[] args) throws MessagingException {
         if (args.length != 8) {
@@ -18,13 +22,13 @@ public class MailingListServer {
             return;
         }
 
-        HostInformation host = new HostInformation(args[0], args[1], args[2], args[3], args[4], args[5]);
+        host = new HostInformation(args[0], args[1], args[2], args[3], args[4], args[5]);
 
-        String listAddress = args[6];
+        listAddress = args[6];
 
-        int interval = new Integer(args[7]).intValue();
+        interval = new Integer(args[7]).intValue();
 
-        Roster roster = null;
+        roster = null;
         try {
             roster = new FileRoster("roster.txt");
         } catch (Exception e) {

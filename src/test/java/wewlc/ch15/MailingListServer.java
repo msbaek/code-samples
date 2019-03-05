@@ -12,6 +12,11 @@ public class MailingListServer {
     private static String listAddress;
     private static int interval;
     private static Roster roster;
+    private static MailSender mailSender;
+
+    public MailingListServer() {
+        mailSender = new MailSender();
+    }
 
     public static void main(String[] args) throws MessagingException {
         if (args.length != 8) {
@@ -94,13 +99,7 @@ public class MailingListServer {
                         else
                             forward.setText((String) content);
 
-                        Properties props = new Properties();
-                        props.put("mail.smtp.host", host.smtpHost);
-
-                        Session smtpSession = Session.getDefaultInstance(props, null);
-                        Transport transport = smtpSession.getTransport("smtp");
-                        transport.connect(host.smtpHost, host.smtpUser, host.smtpPassword);
-                        transport.sendMessage(forward, roster.getAddresses());
+                        mailSender.sendMail(forward);
                         message.setFlag(Flags.Flag.DELETED, true);
                     }
                 }
@@ -119,4 +118,15 @@ public class MailingListServer {
         }
     }
 
+    private static class MailSender {
+        public void sendMail(MimeMessage forward) throws MessagingException {
+            Properties props = new Properties();
+            props.put("mail.smtp.host", host.smtpHost);
+
+            Session smtpSession = Session.getDefaultInstance(props, null);
+            Transport transport = smtpSession.getTransport("smtp");
+            transport.connect(host.smtpHost, host.smtpUser, host.smtpPassword);
+            transport.sendMessage(forward, roster.getAddresses());
+        }
+    }
 }

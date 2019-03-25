@@ -1,5 +1,6 @@
 package wewlc.ch21;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class AddEmployeeCmd {
@@ -41,16 +42,16 @@ public class AddEmployeeCmd {
         outputStream.write(getSize());
         outputStream.write(commandChar);
         String name = this.name;
+        writeField(outputStream, name);
+        writeField(outputStream, address);
+        writeField(outputStream, city);
+        writeField(outputStream, state);
+        writeField(outputStream, yearlySalary);
+        outputStream.write(footer);
+    }
+
+    private void writeField(OutputStream outputStream, String name) throws IOException {
         outputStream.write(name.getBytes());
         outputStream.write(0x00);
-        outputStream.write(address.getBytes());
-        outputStream.write(0x00);
-        outputStream.write(city.getBytes());
-        outputStream.write(0x00);
-        outputStream.write(state.getBytes());
-        outputStream.write(0x00);
-        outputStream.write(yearlySalary.getBytes());
-        outputStream.write(0x00);
-        outputStream.write(footer);
     }
 }

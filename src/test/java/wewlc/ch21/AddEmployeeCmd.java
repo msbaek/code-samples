@@ -40,6 +40,7 @@ public class AddEmployeeCmd {
         outputStream.write(header);
         outputStream.write(getSize());
         outputStream.write(commandChar);
+        String name = this.name;
         outputStream.write(name.getBytes());
         outputStream.write(0x00);
         outputStream.write(address.getBytes());

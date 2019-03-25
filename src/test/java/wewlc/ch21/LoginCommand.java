@@ -2,7 +2,7 @@ package wewlc.ch21;
 
 import java.io.OutputStream;
 
-public class LoginCommand {
+public class LoginCommand extends Command {
     private String userName;
     private String passwd;
     private static final byte[] header = {(byte) 0xde, (byte) 0xad};
@@ -26,10 +26,8 @@ public class LoginCommand {
         outputStream.write(header);
         outputStream.write(getSize());
         outputStream.write(commandChar);
-        outputStream.write(userName.getBytes());
-        outputStream.write(0x00);
-        outputStream.write(passwd.getBytes());
-        outputStream.write(0x00);
+        writeField(outputStream, userName);
+        writeField(outputStream, passwd);
         outputStream.write(footer);
     }
 }

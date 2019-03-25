@@ -41,8 +41,7 @@ public class AddEmployeeCmd {
         outputStream.write(header);
         outputStream.write(getSize());
         outputStream.write(commandChar);
-        String name = this.name;
-        writeField(outputStream, name);
+        writeField(outputStream, this.name);
         writeField(outputStream, address);
         writeField(outputStream, city);
         writeField(outputStream, state);

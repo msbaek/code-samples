@@ -3,7 +3,7 @@ package wewlc.ch21;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class AddEmployeeCmd {
+public class AddEmployeeCmd extends Command {
     String name;
     String address;
     String city;
@@ -47,10 +47,5 @@ public class AddEmployeeCmd {
         writeField(outputStream, state);
         writeField(outputStream, yearlySalary);
         outputStream.write(footer);
-    }
-
-    private void writeField(OutputStream outputStream, String name) throws IOException {
-        outputStream.write(name.getBytes());
-        outputStream.write(0x00);
     }
 }

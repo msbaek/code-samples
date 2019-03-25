@@ -41,11 +41,15 @@ public class AddEmployeeCmd extends Command {
         outputStream.write(header);
         outputStream.write(getSize());
         outputStream.write(commandChar);
+        writeBody(outputStream);
+        outputStream.write(footer);
+    }
+
+    private void writeBody(OutputStream outputStream) throws IOException {
         writeField(outputStream, this.name);
         writeField(outputStream, address);
         writeField(outputStream, city);
         writeField(outputStream, state);
         writeField(outputStream, yearlySalary);
-        outputStream.write(footer);
     }
 }

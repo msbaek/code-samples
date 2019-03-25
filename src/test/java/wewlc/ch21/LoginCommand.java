@@ -1,5 +1,6 @@
 package wewlc.ch21;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class LoginCommand extends Command {
@@ -26,8 +27,12 @@ public class LoginCommand extends Command {
         outputStream.write(header);
         outputStream.write(getSize());
         outputStream.write(commandChar);
+        writeBody(outputStream);
+        outputStream.write(footer);
+    }
+
+    private void writeBody(OutputStream outputStream) throws IOException {
         writeField(outputStream, userName);
         writeField(outputStream, passwd);
-        outputStream.write(footer);
     }
 }

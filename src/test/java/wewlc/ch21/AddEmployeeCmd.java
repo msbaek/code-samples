@@ -16,10 +16,10 @@ public class AddEmployeeCmd extends Command {
     private static final int CMD_BYTE_LENGTH = 1;
 
     private int getSize() {
-        return header.length +
+        return getHeader().length +
                 SIZE_LENGTH +
                 CMD_BYTE_LENGTH +
-                footer.length +
+                getFooter().length +
                 name.getBytes().length + 1 +
                 address.getBytes().length + 1 +
                 city.getBytes().length + 1 +
@@ -38,11 +38,23 @@ public class AddEmployeeCmd extends Command {
     }
 
     public void write(OutputStream outputStream) throws Exception {
-        outputStream.write(header);
+        outputStream.write(getHeader());
         outputStream.write(getSize());
-        outputStream.write(commandChar);
+        outputStream.write(getCommandChar());
         writeBody(outputStream);
-        outputStream.write(footer);
+        outputStream.write(getFooter());
+    }
+
+    private byte[] getFooter() {
+        return footer;
+    }
+
+    private byte[] getCommandChar() {
+        return commandChar;
+    }
+
+    private byte[] getHeader() {
+        return header;
     }
 
     private void writeBody(OutputStream outputStream) throws IOException {

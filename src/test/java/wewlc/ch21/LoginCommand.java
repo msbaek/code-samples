@@ -18,17 +18,29 @@ public class LoginCommand extends Command {
     }
 
     private int getSize() {
-        return header.length + SIZE_LENGTH + CMD_BYTE_LENGTH +
-                footer.length + userName.getBytes().length + 1 +
+        return getHeader().length + SIZE_LENGTH + CMD_BYTE_LENGTH +
+                getFooter().length + userName.getBytes().length + 1 +
                 passwd.getBytes().length + 1;
     }
 
     public void write(OutputStream outputStream) throws Exception {
-        outputStream.write(header);
+        outputStream.write(getHeader());
         outputStream.write(getSize());
-        outputStream.write(commandChar);
+        outputStream.write(getCommandChar());
         writeBody(outputStream);
-        outputStream.write(footer);
+        outputStream.write(getFooter());
+    }
+
+    private byte[] getFooter() {
+        return footer;
+    }
+
+    private byte[] getCommandChar() {
+        return commandChar;
+    }
+
+    private byte[] getHeader() {
+        return header;
     }
 
     private void writeBody(OutputStream outputStream) throws IOException {

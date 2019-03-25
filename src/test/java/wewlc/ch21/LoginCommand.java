@@ -17,33 +17,30 @@ public class LoginCommand extends Command {
         this.passwd = passwd;
     }
 
-    private int getSize() {
+    @Override
+    protected int getSize() {
         return getHeader().length + SIZE_LENGTH + CMD_BYTE_LENGTH +
                 getFooter().length + userName.getBytes().length + 1 +
                 passwd.getBytes().length + 1;
     }
 
-    public void write(OutputStream outputStream) throws Exception {
-        outputStream.write(getHeader());
-        outputStream.write(getSize());
-        outputStream.write(getCommandChar());
-        writeBody(outputStream);
-        outputStream.write(getFooter());
-    }
-
-    private byte[] getFooter() {
+    @Override
+    protected byte[] getFooter() {
         return footer;
     }
 
-    private byte[] getCommandChar() {
+    @Override
+    protected byte[] getCommandChar() {
         return commandChar;
     }
 
-    private byte[] getHeader() {
+    @Override
+    protected byte[] getHeader() {
         return header;
     }
 
-    private void writeBody(OutputStream outputStream) throws IOException {
+    @Override
+    protected void writeBody(OutputStream outputStream) throws IOException {
         writeField(outputStream, userName);
         writeField(outputStream, passwd);
     }

@@ -15,7 +15,8 @@ public class AddEmployeeCmd extends Command {
     private static final int SIZE_LENGTH = 1;
     private static final int CMD_BYTE_LENGTH = 1;
 
-    private int getSize() {
+    @Override
+    protected int getSize() {
         return getHeader().length +
                 SIZE_LENGTH +
                 CMD_BYTE_LENGTH +
@@ -37,27 +38,23 @@ public class AddEmployeeCmd extends Command {
         this.yearlySalary = Integer.toString(yearlySalary);
     }
 
-    public void write(OutputStream outputStream) throws Exception {
-        outputStream.write(getHeader());
-        outputStream.write(getSize());
-        outputStream.write(getCommandChar());
-        writeBody(outputStream);
-        outputStream.write(getFooter());
-    }
-
-    private byte[] getFooter() {
+    @Override
+    protected byte[] getFooter() {
         return footer;
     }
 
-    private byte[] getCommandChar() {
+    @Override
+    protected byte[] getCommandChar() {
         return commandChar;
     }
 
-    private byte[] getHeader() {
+    @Override
+    protected byte[] getHeader() {
         return header;
     }
 
-    private void writeBody(OutputStream outputStream) throws IOException {
+    @Override
+    protected void writeBody(OutputStream outputStream) throws IOException {
         writeField(outputStream, this.name);
         writeField(outputStream, address);
         writeField(outputStream, city);

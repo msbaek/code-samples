@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.RC1'
+        springBootVersion = '2.1.4'
         rxjava_ver = '1.1.1'
         rxandroid_ver = '1.1.0'
         reactivestreams_ver='1.0.0'
@@ -55,6 +55,7 @@ dependencies {
     compile 'org.apache.kafka:kafka-streams:1.0.0'
     compile 'org.apache.kafka:kafka-clients:1.0.0'
     compile 'com.jayway.jsonpath:json-path:2.4.0'
+    compile 'com.h2database:h2:1.4.199'
 
     testCompile('de.bechte.junit:junit-hierarchicalcontextrunner:4.12.1')
     testCompile('org.springframework.boot:spring-boot-starter-test')

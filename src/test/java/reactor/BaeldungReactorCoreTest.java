@@ -35,11 +35,11 @@ public class BaeldungReactorCoreTest {
                 .subscribe(elements::add);
         assertThat(elements).containsExactly(1, 2, 3, 4);
 
-        elements = Flux.just(1, 2, 3, 4)
-                .log()
-                .collect(toList())
-                .subscribe()
-                .block();
+//        elements = Flux.just(1, 2, 3, 4)
+//                .log()
+//                .collect(toList())
+//                .subscribe()
+//                .block();
         assertThat(elements).containsExactly(1, 2, 3, 4);
         /**
          * everything is running on the main thread

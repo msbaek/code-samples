@@ -71,8 +71,8 @@ public class InfoQReactorTest {
         Flux<String> b = Flux.just("let's get", "the party", "started")
                 .delaySubscription(Duration.ofMillis(400));
 
-        Flux.firstEmitting(a, b)
-                .toIterable()
-                .forEach(System.out::println);
+//        Flux.firstEmitting(a, b)
+//                .toIterable()
+//                .forEach(System.out::println);
     }
 }

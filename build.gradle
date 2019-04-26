@@ -1,10 +1,10 @@
 buildscript {
     ext {
-        springBootVersion = '2.1.4'
+        springBootVersion = '2.1.4.RELEASE'
         rxjava_ver = '1.1.1'
         rxandroid_ver = '1.1.0'
         reactivestreams_ver='1.0.0'
-        projectreactor_ver='3.0.7.RELEASE'
+        projectreactor_ver='3.2.8.RELEASE'
         kotlin_version = '1.2.30'
         junit5_version = '5.2.0'
     }
@@ -72,4 +72,5 @@ dependencies {
     testCompile "io.cucumber:cucumber-java:3.0.2"
     testCompile "io.cucumber:cucumber-junit:3.0.2"
     testCompile "org.springframework.retry:spring-retry:1.2.2.RELEASE"
+    testCompile "io.projectreactor:reactor-test:$projectreactor_ver"
 }

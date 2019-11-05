@@ -43,7 +43,6 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-webflux')
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile 'com.google.guava:guava:19.0'
     compile "io.reactivex:rxjava:$rxjava_ver"
     compile "io.reactivex:rxandroid:$rxandroid_ver"
     compile "org.reactivestreams:reactive-streams:$reactivestreams_ver"
@@ -56,6 +55,10 @@ dependencies {
     compile 'org.apache.kafka:kafka-clients:1.0.0'
     compile 'com.jayway.jsonpath:json-path:2.4.0'
     compile 'com.h2database:h2:1.4.199'
+    compile 'one.util:streamex:0.7.0'
+    compile 'org.jooq:jool:0.9.14'
+//    compile 'com.google.guava:guava:19.0'
+    compile 'com.google.guava:guava:28.1-jre'
 
     testCompile('de.bechte.junit:junit-hierarchicalcontextrunner:4.12.1')
     testCompile('org.springframework.boot:spring-boot-starter-test')

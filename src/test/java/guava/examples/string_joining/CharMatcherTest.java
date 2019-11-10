@@ -21,7 +21,7 @@ public class CharMatcherTest {
     public void getPhoneNumber() {
         String input = "my phone no. is 010-824-1490";
         String result = CharMatcher
-                .DIGIT
+                .inRange('0', '9')
                 .or(CharMatcher.is('-'))
                 .retainFrom(input);
         assertThat(result, is("010-824-1490"));

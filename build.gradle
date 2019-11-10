@@ -59,6 +59,7 @@ dependencies {
     compile 'org.jooq:jool:0.9.14'
 //    compile 'com.google.guava:guava:19.0'
     compile 'com.google.guava:guava:28.1-jre'
+    compile 'com.squareup.okhttp3:okhttp:3.14.3'
 
     testCompile('de.bechte.junit:junit-hierarchicalcontextrunner:4.12.1')
     testCompile('org.springframework.boot:spring-boot-starter-test')

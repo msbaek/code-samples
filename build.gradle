@@ -79,4 +79,6 @@ dependencies {
     testCompile "io.cucumber:cucumber-junit:3.0.2"
     testCompile "org.springframework.retry:spring-retry:1.2.2.RELEASE"
     testCompile "io.projectreactor:reactor-test:$projectreactor_ver"
+    testCompile 'org.openjdk.jmh:jmh-core:1.23'
+    testCompile 'org.openjdk.jmh:jmh-generator-annprocess:1.23'
 }
